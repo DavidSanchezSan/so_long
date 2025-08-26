@@ -5,8 +5,12 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <string.h>
+#include <fcntl.h>
+#include<limits.h>
 #include "mlx.h"
 
+#define BUFFER_SIZE 64
 #define WIN_WIDTH 800
 #define WIN_HEIGHT 600
 #define CELL_SIZE 64
@@ -29,5 +33,18 @@ int     close_game(t_game *game);
 void    move_player(t_game *game, int dx, int dy);
 char    get_map_cell(int x, int y);
 void    draw_map(t_game *game);
-
+//
+int valid_walls(char **map, int width, int height);
+int valid_characters(char c);
+int ber_extension_validation(char *name_map);
+void print_error(char *msg);
+//gnl
+char	*ft_substr(char const *s, unsigned int start, size_t len);
+char	*ft_strjoin(char const *s1, char const *s2);
+size_t	ft_strlen(const char *s);
+char	*ft_strchr(const char *s, int c);
+char	*ft_strdup(const char *s);
+char	*get_next_line(int fd);
+char    **read_map(const char *filename);
+void    free_map(char **map);
 #endif
