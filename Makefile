@@ -2,7 +2,7 @@ NAME = so_long
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror -I./minilibx-linux
+CFLAGS = -g -Wall -Wextra -Werror -I./minilibx-linux
 
 MLX = -L./minilibx-linux -lmlx -lX11 -lXext -lbsd
 

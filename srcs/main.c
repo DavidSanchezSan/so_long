@@ -93,38 +93,25 @@
 
 //#########################################################################################//
 
-// int	main(int argc, char **argv)
-// {
-// 	if (argc != 2)
-// 	{
-// 		write(1, "Programme must be launch with 2 arguments.\n", 44);
-// 		return (0);
-// 	}
-//     ber_extension_validation(argv[1]);
-// 	return (0);
-// }
-
 
 int main(int argc, char **argv)
 {
+    char **map;
+
     if (argc != 2)
     {
-        write(1, "Programme must be launch with 2 arguments.\n", 44);
-        printf("Uso: %s <archivo_mapa>\n", argv[0]);
-        return 1;
+        print_error("Programme must be launch with 2 arguments.\n");
+        return (1);
     }
     if (!ber_extension_validation(argv[1]))
-        exit(2);
-    char **map = read_map(argv[1]);
+        exit(1);
+    map = read_map(argv[1]);
     if (!map)
-    {
-        printf("Error al leer el mapa\n");
-        return 1;
-    }
+        return (2);
     printf("Mapa cargado:\n");
     for (int i = 0; map[i] != NULL; i++)
         printf("%s", map[i]);
     printf("\n");
     free_map(map);
-    return 0;
+    return (0);
 }

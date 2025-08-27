@@ -35,9 +35,11 @@ char    get_map_cell(int x, int y);
 void    draw_map(t_game *game);
 //
 int valid_walls(char **map, int width, int height);
-int valid_characters(char c);
+int valid_characters(char **map, int width, int height);
+int map_checks(char **map);
 int ber_extension_validation(char *name_map);
 void print_error(char *msg);
+char *ft_strrchr(char *s, int c);
 //gnl
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_strjoin(char const *s1, char const *s2);
@@ -45,6 +47,9 @@ size_t	ft_strlen(const char *s);
 char	*ft_strchr(const char *s, int c);
 char	*ft_strdup(const char *s);
 char	*get_next_line(int fd);
-char    **read_map(const char *filename);
+int     open_file(char *filename);
+char    **resize_map(int lines_allocated);
+char    **read_map(char *filename);
+char    **get_map(int fd, int *lines_allocated, char **map);
 void    free_map(char **map);
 #endif
