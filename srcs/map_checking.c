@@ -1,161 +1,127 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   map_checking.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dasanche <dasanche@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/20 18:07:19 by dasanche          #+#    #+#             */
+/*   Updated: 2025/08/28 16:54:21 by dasanche         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "so_long.h"
 
-
-int valid_characters(char **map, int width, int height)
+// Todos los caracteres son validos:
+int	valid_characters(char **map, int width, int height)
 {
-    int x;
-    int y;
+	int	x;
+	int	y;
 
-    x = 0;
-    while (x < height)
+	x = 0;
+	while (x < height)
+	{
+		y = 0;
+		while (y < width)
+		{
+			if (map[x][y] != '0' && map[x][y] != '1' && map[x][y] != 'C'
+				&& map[x][y] != 'E' && map[x][y] != 'P')
+				return (0);
+			y++;
+		}
+		x++;
+	}
+	return (1);
+}
+
+// Todos el mapa esta rodeado de muros:
+int	valid_walls(char **map, int width, int height)
+{
+	int	x;
+
+	x = 0;
+	while (x < width)
+	{
+		if (map[0][x] != '1' || map[height - 1][x] != '1')
+			return (0);
+		x++;
+	}
+	x = 0;
+	while (x < height)
+	{
+		if (map[x][0] != '1' || map[x][width - 1] != '1')
+			return (0);
+		x++;
+	}
+	return (1);
+}
+// Conteo de salida/objeto/posicion_inicial:
+
+int obj_exit_init_pos_count(char **map, int width, int height)
+{
+    int	x;
+	int	y;
+    int exit_count;
+    int obj_count;
+    int init_pos_count;
+
+    y = 0;
+	exit_count = 0;
+	obj_count = 0;
+	init_pos_count = 0;
+    while (y < height)
     {
-        y = 0;
-        while (y < width)
+        x = 0;
+        while (x < width)
         {
-            if (map[x][y] != '0' && map[x][y] != '1' && map[x][y] != 'C'
-            && map[x][y] != 'E' && map[x][y] != 'P')
-                return (0);
-            y++;
+            if (map[y][x] == 'E') exit_count++;
+            else if (map[y][x] == 'C') obj_count++;
+            else if (map[y][x] == 'P') init_pos_count++;
+            x++;
         }
-        x++;
+        y++;
     }
-    return (1);
+    if (exit_count != 1 || init_pos_count != 1)
+        return (print_error("Map needs at least E, C, P and can have no more than one E and P\n"), 0);
+    return (obj_count);
 }
 
-int valid_walls(char **map, int width, int height)
-{
-    int x;
+// Dimensiones del mapa:
 
-    x = 0;
-    while (x < width)
-    {
-        if (map[0][x] != '1' || map[height - 1][x] != '1')
-            return (0);
-        x++;
-    }
-    x = 0;
-    while (x < height)
-    {
-        if (map[x][0] != '1' || map[x][width - 1] != '1')
-            return (0);
-        x++;
-    }
-
-    return (1);
-}
-
-int map_checks(char **map)
+void get_map_dimensions(char **map, int *width, int *height)
 {
     int x;
     int y;
-    int width;
-    int height;
 
-    width = 0;
-    height = 0;
-    x = 0;
+	x = 0;
+	y = 0;
+    *width = 0;
+    *height = 0;
     while (map[x] != NULL)
     {
         y = 0;
         while (map[x][y] != '\0')
             y++;
-        if (y > width)
-            width = y;
+        if (y > *width)
+            *width = y;
         x++;
     }
-    height = x;
+	*width = *width -1;
+    *height = x;
+}
+// Chequeos del mapa:
+int map_checks(char **map)
+{
+    int width;
+	int	height;
+	int objects;
+
+    get_map_dimensions(map, &width, &height);
     if (!valid_walls(map, width, height) || !valid_characters(map, width, height))
-    {
-        print_error("Map must be surrounded by walls and contain only valid characters");
-        return (0);
-    }
-    return (1);
-}
-
-//########################################################################################
-
-int open_file(char *filename)
-{
-    int fd;
-    
-    fd= open(filename, O_RDONLY);
-    if (fd < 0)
-        print_error("Map-file could not be opened\n");
-    return (fd);
-}
-
-char **resize_map(int lines_allocated)
-{
-    char **new_map;
-    
-    new_map = malloc(sizeof(char *) * lines_allocated);
-    if (!new_map)
-        return (NULL);
-    return (new_map);
-}
-
-char **get_map(int fd, int *lines_allocated, char **map)
-{
-    int count;
-    char *line;
-    char **new_map;
-
-    count = 0;
-    while ((line = get_next_line(fd)) != NULL)
-    {
-        if (count >= *lines_allocated)
-        {
-            new_map = resize_map(*lines_allocated * 2);
-            if (!new_map)
-            {
-                free_map(map);
-                close(fd);
-                return (NULL);
-            }
-            map = new_map;
-            *lines_allocated *= 2;
-        }
-        map[count] = line;
-        count++;
-    }
-    map[count] = NULL;
-    return (map);
-}
-
-
-char **read_map(char *filename)
-{
-    int fd;
-    int lines_allocated;
-    char **map;
-
-    fd = open_file(filename);
-    if (fd < 0)
-        return (NULL);
-    lines_allocated = 16;
-    map = malloc(sizeof(char *) * lines_allocated);
-    if (!map)
-    {
-        close(fd); 
-        return (NULL);
-    }
-    map = get_map(fd, &lines_allocated, map);
-    close(fd);
-    return (map);
-}
-
-void free_map(char **map)
-{
-    int i;
-    
-    i = 0;
-    if (map)
-    {
-        while (map[i])
-        {
-            free(map[i]);
-            i++;
-        }
-        free(map);
-    }
-}
+        return (print_error("Map = sourrounded by wall and only valid characters\n"),
+		0);
+    objects = obj_exit_init_pos_count(map, width, height);
+	if (objects == 0)
+		return (0);
+    return (objects);
+};

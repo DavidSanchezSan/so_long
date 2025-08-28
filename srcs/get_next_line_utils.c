@@ -100,7 +100,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 }
 
 // Reserves and returns a substring of the string ‘s’.
-// The substring starts from index ‘start’ and has a maximum length of ‘len’.
+// The substring starts from ‘start’ and has maximum length: ‘len’.
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {

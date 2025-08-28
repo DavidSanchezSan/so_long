@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dasanche <dasanche@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/20 18:07:19 by dasanche          #+#    #+#             */
+/*   Updated: 2025/08/28 16:54:21 by dasanche         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "so_long.h"
 
 // extern char *map[];  // Declaración externa del mapa
@@ -8,14 +20,10 @@
 //     mlx_destroy_display(game->mlx);  // Liberar recursos de la conexión
 //     exit(0);
 // }
-
-
 // int key_hook(int keycode, void *param)
 // {
 //     t_game *game = (t_game *)param;
-
-//     // printf("Key pressed: %d\n", keycode);  // Para verificar qué tecla fue presionada
-
+//     // printf("Key pressed: %d\n", keycode);  // Verificar tecla presionada
 //     if (keycode == 65307)  // Escape
 //     {
 //         close_game(game);
@@ -44,7 +52,6 @@
 //     return (0);
 // }
 
-
 // int main(void)
 // {
 //     t_game game;
@@ -52,23 +59,19 @@
 //     // Inicializar la estructura t_game
 //     game.mlx = mlx_init();
 //     game.win = mlx_new_window(game.mlx, WIN_WIDTH, WIN_HEIGHT, "So_Long");
-
 //     // Inicializar las posiciones del jugador y el mapa
 //     game.player_x = 1;
 //     game.player_y = 1;
 //     game.map = map; // Aquí asignamos el mapa global a la estructura
-
 //     draw_map(&game);  // Dibuja el mapa inicialmente
-
 //     // Pasamos la estructura `game` al hook
 //     mlx_key_hook(game.win, key_hook, &game);            // Gestionar teclas
 //     mlx_hook(game.win, 17, 0, close_game, NULL);        // Gestionar "X"
-
 //     mlx_loop(game.mlx);
 //     return (0);
 // }
 
-//#############################################################################################//
+//##########################################################################//
 
 // int	main(int argc, char **argv)
 // {
@@ -91,27 +94,31 @@
 // 	return (0);
 // }
 
-//#########################################################################################//
+//##########################################################################//
 
-
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-    char **map;
+	char	**ber_map;
+	t_map	map;
 
-    if (argc != 2)
-    {
-        print_error("Programme must be launch with 2 arguments.\n");
-        return (1);
-    }
-    if (!ber_extension_validation(argv[1]))
-        exit(1);
-    map = read_map(argv[1]);
-    if (!map)
-        return (2);
-    printf("Mapa cargado:\n");
-    for (int i = 0; map[i] != NULL; i++)
-        printf("%s", map[i]);
-    printf("\n");
-    free_map(map);
-    return (0);
+	if (argc != 2)
+	{
+		print_error("Programme must be launch with 2 arguments.\n");
+		return (1);
+	}
+	if (!ber_extension_validation(argv[1]))
+		exit(1);
+	ber_map = read_map(argv[1]);
+	if (!ber_map)
+		return (2);
+	map.objects = map_checks(ber_map);
+	if (map.objects == 0)
+		return (2);
+	printf("Map objects: %i\n", map.objects);
+	printf("Mapa cargado:\n");
+	for (int i = 0; ber_map[i] != NULL; i++)
+		printf("%s", ber_map[i]);
+	printf("\n");
+	free_map(ber_map);
+	return (0);
 }

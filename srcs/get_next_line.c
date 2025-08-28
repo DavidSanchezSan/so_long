@@ -12,68 +12,92 @@
 
 #include "so_long.h"
 
-char	*get_next_line(int fd)
+static char	*ft_join_free(char *buffer, char *stored)
 {
-	char		*buffer;
-	static char	*stored;
-	char		*line;
-	char		*temp;
-	int			bytes_read;
-	int			to_end;
+	char	*temp;
 
-	line = NULL;
-	temp = NULL;
-	bytes_read = 1;
-	to_end = 0;
-	buffer = malloc(BUFFER_SIZE + 1);
-	// if (BUFFER_SIZE < 1 || fd < 0)
-	// 	return(NULL);
-	if (buffer == NULL)
+	temp = ft_strjoin(stored, buffer);
+	free(stored);
+	return (temp);
+}
+
+static char	*ft_read_line(int *fd, int *bytes_read, char *buffer, char *stored)
+{
+	while (*bytes_read > 0)
 	{
-		printf("Error de memoria");
-		return (NULL);
-	}
-	while (bytes_read > 0)
-	{
-		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		if (bytes_read == -1)
+		*bytes_read = read(*fd, buffer, BUFFER_SIZE);
+		if (*bytes_read == -1)
 		{
-			printf("Error de lectura");
-			free(buffer);
-			return (NULL);
-		}
-		buffer[bytes_read] = '\0';
-		if (stored == NULL && bytes_read == 0)
-		{
-			free(buffer);
-			return (NULL);
-		}
-		if (stored == NULL)
-			stored = ft_strdup(buffer);
-		else
-		{
-			temp = ft_strjoin(stored, buffer);
 			free(stored);
-			stored = temp;
+			stored = NULL;
+			return (NULL);
 		}
+		buffer[*bytes_read] = '\0';
+		if (stored == NULL && *bytes_read == 0)
+			return (NULL);
+		if (stored == NULL)
+			stored = ft_strdup("");
+		stored = ft_join_free(buffer, stored);
 		if (ft_strchr(stored, '\n') != NULL)
 			break ;
 	}
-	if (ft_strchr(stored, '\n') != NULL)
+	return (stored);
+}
+
+static char	*ft_cleanup_stored(char **stored, char *line)
+{
+	free(*stored);
+	*stored = NULL;
+	return (line);
+}
+
+static char	*ft_find_line(char **stored, int bytes_read)
+{
+	char	*line;
+	char	*temp;
+	int		to_end;
+
+	line = NULL;
+	temp = NULL;
+	to_end = 0;
+	if (ft_strchr(*stored, '\n') != NULL)
 	{
-		while (stored[to_end] != '\n' && stored[to_end] != '\0')
+		while ((*stored)[to_end] != '\n' && (*stored)[to_end] != '\0')
 			to_end++;
-		line = ft_substr(stored, 0, to_end + 1);
-		temp = ft_substr(stored, to_end + 1, (ft_strlen(stored) - to_end - 1));
-		free(stored);
-		stored = temp;
+		line = ft_substr(*stored, 0, to_end + 1);
+		temp = ft_substr(*stored, to_end + 1, ft_strlen(*stored) - to_end - 1);
+		free(*stored);
+		*stored = temp;
 	}
-	else if (bytes_read == 0 && stored != NULL)
+	else if (bytes_read == 0 && *stored != NULL)
 	{
-		line = ft_strdup(stored);
-		free(stored);
-		stored = NULL;
+		if ((*stored)[0] == '\0')
+			return (ft_cleanup_stored(stored, NULL));
+		else
+			return (line = ft_strdup(*stored), ft_cleanup_stored(stored, line));
 	}
+	return (line);
+}
+
+char	*get_next_line(int fd)
+{
+	char		*buffer;
+	static char	*stored[1024];
+	char		*line;
+	int			bytes_read;
+
+	line = NULL;
+	bytes_read = 1;
+	if (BUFFER_SIZE < 1 || fd < 0)
+		return (NULL);
+	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (buffer == NULL)
+		return (NULL);
+	stored[fd] = ft_read_line(&fd, &bytes_read, buffer, stored[fd]);
+	if (!stored[fd])
+		return (free(buffer), stored[fd] = NULL, NULL);
+	line = ft_find_line(&stored[fd], bytes_read);
 	free(buffer);
+	buffer = NULL;
 	return (line);
 }
