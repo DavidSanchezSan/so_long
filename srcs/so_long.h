@@ -77,4 +77,5 @@ char	**read_map(char *filename);
 char	**get_map(int fd, int *lines_allocated, char **map);
 void	free_map(char **map);
 
+int rectangular_map(char **map, int width, int height);
 #endif

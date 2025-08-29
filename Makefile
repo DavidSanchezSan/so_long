@@ -6,7 +6,7 @@ CFLAGS = -g -Wall -Wextra -Werror -I./minilibx-linux
 
 MLX = -L./minilibx-linux -lmlx -lX11 -lXext -lbsd
 
-SRC = srcs/get_next_line_utils.c srcs/get_next_line.c srcs/main.c srcs/map_checking.c srcs/map_reading.c srcs/map.c srcs/object.c srcs/player.c srcs/utils.c 
+SRC = srcs/get_next_line_utils.c srcs/get_next_line.c srcs/main.c srcs/map_checking.c srcs/map_reading.c srcs/map_valid_way_rectangular.c srcs/map.c srcs/object.c srcs/player.c srcs/utils.c 
 
 OBJ = $(SRC:.c=.o)
 

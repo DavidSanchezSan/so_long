@@ -117,6 +117,9 @@ int map_checks(char **map)
 	int objects;
 
     get_map_dimensions(map, &width, &height);
+	if (rectangular_map(map, width, height) != 1)
+		return (print_error("Map must be rectangular only\n"), 0);
+	printf("Dimensiones del mapa = Width (ancho) = %i Height (alto) = %i\n", width, height);
     if (!valid_walls(map, width, height) || !valid_characters(map, width, height))
         return (print_error("Map = sourrounded by wall and only valid characters\n"),
 		0);
