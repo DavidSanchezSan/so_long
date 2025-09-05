@@ -50,4 +50,3 @@ int rectangular_map(char **map, int width, int height)
 	}
     return (1);
 }
-

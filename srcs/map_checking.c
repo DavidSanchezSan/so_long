@@ -87,7 +87,6 @@ int obj_exit_init_pos_count(char **map, int width, int height)
 }
 
 // Dimensiones del mapa:
-
 void get_map_dimensions(char **map, int *width, int *height)
 {
     int x;
