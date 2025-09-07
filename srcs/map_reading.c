@@ -12,70 +12,89 @@
 
 #include "so_long.h"
 
-int	open_file(char *filename)
+// Dimensiones del mapa:
+void	get_map_dimensions(char **map, int *width, int *height)
 {
-	int	fd;
+	int	i;
 
-	fd = open(filename, O_RDONLY);
-	if (fd < 0)
-		print_error("Map-file could not be opened\n");
-	return (fd);
+	*width = 0;
+	*height = 0;
+	i = 0;
+	while (map[i] != NULL)
+	{
+		if ((int)ft_strlen(map[i]) > *width)
+			*width = ft_strlen(map[i]);
+		i++;
+	}
+	*height = i;
 }
+// Cuenta cuántas líneas tiene el archivo
 
-char	**resize_map(int lines_allocated)
-{
-	char	**new_map;
-
-	new_map = malloc(sizeof(char *) * lines_allocated);
-	if (!new_map)
-		return (NULL);
-	return (new_map);
-}
-
-char	**get_map(int fd, int *lines_allocated, char **map)
+static int	count_lines(int fd)
 {
 	int		count;
 	char	*line;
-	char	**new_map;
-	char	*temp_line;
 
 	count = 0;
-	temp_line = get_next_line(fd);
-	while (temp_line != NULL)
+	line = get_next_line(fd);
+	while (line)
 	{
-		line = temp_line;
-		temp_line = get_next_line(fd);
-		new_map = resize_map(*lines_allocated * 2);
-		if (!new_map)
-			return (free_map(map), close(fd), NULL);
-		if (count >= *lines_allocated)
-		{
-			*map = *new_map;
-			*lines_allocated *= 2;
-		}
-		map[count++] = line;
+		count++;
+		free(line);
+		line = get_next_line(fd);
 	}
-	map[count] = NULL;
+	return (count);
+}
+
+// Lee todas las líneas y elimina el salto de línea final si existe
+static char	**fill_map(int fd, int lines)
+{
+	char	**map;
+	char	*line;
+	int		i;
+	size_t	len;
+
+	map = malloc(sizeof(char *) * (lines + 1));
+	if (!map)
+		return (NULL);
+	i = 0;
+	while (i < lines)
+	{
+		line = get_next_line(fd);
+		if (!line)
+			break ;
+		len = ft_strlen(line);
+		if (len > 0 && line[len - 1] == '\n')
+			line[len - 1] = '\0';
+		if (line[0] == '\0')
+			return (free(line), print_error("Map contains empty lines\n"),
+				free_map(map), NULL);
+		map[i++] = line;
+	}
+	map[i] = NULL;
 	return (map);
 }
 
 char	**read_map(char *filename)
 {
 	int		fd;
-	int		lines_allocated;
+	int		lines;
 	char	**map;
 
 	fd = open_file(filename);
 	if (fd < 0)
 		return (NULL);
-	lines_allocated = 16;
-	map = malloc(sizeof(char *) * lines_allocated);
-	if (!map)
+	lines = count_lines(fd);
+	close(fd);
+	if (lines == 0)
 	{
-		close(fd);
+		print_error("Map is empty\n");
 		return (NULL);
 	}
-	map = get_map(fd, &lines_allocated, map);
+	fd = open_file(filename);
+	if (fd < 0)
+		return (NULL);
+	map = fill_map(fd, lines);
 	close(fd);
 	return (map);
 }
@@ -84,14 +103,13 @@ void	free_map(char **map)
 {
 	int	i;
 
+	if (!map)
+		return ;
 	i = 0;
-	if (map)
+	while (map[i])
 	{
-		while (map[i])
-		{
-			free(map[i]);
-			i++;
-		}
-		free(map);
+		free(map[i]);
+		i++;
 	}
+	free(map);
 }

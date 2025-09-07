@@ -55,8 +55,9 @@ int		close_game(t_game *game);
 // void	draw_map(t_game *game);
 //
 int		valid_walls(char **map, int width, int height);
-int		valid_characters(char **map, int width, int height);
-int		obj_exit_init_pos_count(char **map, int width, int height);
+int		valid_chars(char **map, int width, int height);
+int		exit_init_pos_count(char **map, int width, int height);
+int		exit_count(char **map, int width, int height);
 void	get_map_dimensions(char **map, int *width, int *height);
 int		map_checks(char **map);
 int		ber_extension_validation(char *name_map);
@@ -72,10 +73,10 @@ char	*ft_strdup(const char *s);
 char	*get_next_line(int fd);
 
 int		open_file(char *filename);
-char	**resize_map(int lines_allocated);
+// char	**resize_map(int lines_allocated);
 char	**read_map(char *filename);
-char	**get_map(int fd, int *lines_allocated, char **map);
+// char	**get_map(int fd, int *lines_allocated, char **map);
 void	free_map(char **map);
 
-int rectangular_map(char **map, int width, int height);
+int		rectangular_map(char **map, int width, int height);
 #endif

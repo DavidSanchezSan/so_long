@@ -14,39 +14,83 @@
 
 int rectangular_map(char **map, int width, int height)
 {
-    int x;
+    int i;
 
-    x = 0;
-    while (x < height) // Compruebo si todas las filas tienen la longitud correcta (con salto de línea en las intermedias)
+    i = 0;
+    while (i < height)
     {
-        size_t row_len = ft_strlen(map[x]);
-        if (x < height - 1) // Para las filas intermedias (excepto la última), la longitud debe ser width + 1
-		{
-            if ((int)row_len != width + 1)
-			{
-                // printf("Error en fila %d: longitud esperada %d, obtenida %zu\n", x, width + 1, row_len);
-                return (0);  // No es rectangular si la fila intermedia no tiene longitud esperada
-            }
-        }
-        else // Para la última fila, la longitud debe ser width (sin salto de línea)
-		{
-            if ((int)row_len != width)
-			{
-                // printf("Error en la última fila: longitud esperada %d, obtenida %zu\n", width, row_len);
-                return (0);  // No es rectangular si la última fila no tiene longitud esperada
-            }
-        }
-        x++;
+        if ((int)ft_strlen(map[i]) != width)
+            return (0);
+        i++;
     }
-    if (height == width) // Comprobamos que no sea cuadrado
-	{
-		// printf("Error es un cuadrado");
-		return (0);  // Si es cuadrado (altura == ancho), no es un rectángulo
-	}
-    if (ft_strlen(map[0]) - 1 != (ft_strlen(map[height - 1]))) // Comprobamos si las filas superior e inferior tienen la misma longitud
-	{
-		// printf("Filas diferentes superior e inferior");
-		return (0);  // No es rectangular si no son iguales
-	}
     return (1);
 }
+// #include "so_long.h"
+
+// static void flood_fill(char **map, int x, int y, int height, int width)
+// {
+//     if (x < 0 || y < 0 || x >= height || y >= width)
+//         return;
+//     if (map[x][y] == '1' || map[x][y] == 'V')
+//         return;
+
+//     map[x][y] = 'V';
+
+//     flood_fill(map, x + 1, y, height, width);
+//     flood_fill(map, x - 1, y, height, width);
+//     flood_fill(map, x, y + 1, height, width);
+//     flood_fill(map, x, y - 1, height, width);
+// }
+
+// int valid_path(char **map, int width, int height)
+// {
+//     int x, y;
+//     int player_x = -1, player_y = -1;
+
+//     // 1️⃣ Buscar la posición inicial del jugador
+//     for (x = 0; x < height; x++)
+//     {
+//         for (y = 0; y < width; y++)
+//         {
+//             if (map[x][y] == 'P')
+//             {
+//                 player_x = x;
+//                 player_y = y;
+//                 break;
+//             }
+//         }
+//         if (player_x != -1) break;
+//     }
+
+//     if (player_x == -1)
+//         return (print_error("No starting position found\n"), 0);
+
+//     // 2️⃣ Hacer una copia del mapa porque flood_fill lo modifica
+//     char **map_copy = malloc(sizeof(char *) * (height + 1));
+//     if (!map_copy)
+//         return (0);
+//     for (int i = 0; i < height; i++)
+//         map_copy[i] = ft_strdup(map[i]);
+//     map_copy[height] = NULL;
+
+//     // 3️⃣ Ejecutar flood_fill desde la posición del jugador
+//     flood_fill(map_copy, player_x, player_y, height, width);
+
+//     // 4️⃣ Verificar que todos los 'C' y al menos un 'E' fueron visitados
+//     int exit_found = 0;
+//     for (x = 0; x < height; x++)
+//     {
+//         for (y = 0; y < width; y++)
+//         {
+//             if (map[x][y] == 'C' && map_copy[x][y] != 'V')
+//                 return (free_map(map_copy), print_error("Not all collectibles reachable\n"), 0);
+//             if (map[x][y] == 'E' && map_copy[x][y] == 'V')
+//                 exit_found = 1;
+//         }
+//     }
+
+//     free_map(map_copy);
+//     if (!exit_found)
+//         return (print_error("No valid path to exit\n"), 0);
+//     return (1);
+// }

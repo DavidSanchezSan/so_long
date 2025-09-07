@@ -33,7 +33,7 @@ int	main(int argc, char **argv)
 	printf("Map objects: %i\n", map.objects);
 	printf("Mapa cargado:\n");
 	for (int i = 0; ber_map[i] != NULL; i++)
-		printf("%s", ber_map[i]);
+		printf("%s\n", ber_map[i]);
 	printf("\n");
 	free_map(ber_map);
 	return (0);
