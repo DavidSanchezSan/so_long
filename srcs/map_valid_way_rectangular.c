@@ -12,85 +12,99 @@
 
 #include "so_long.h"
 
-int rectangular_map(char **map, int width, int height)
+int	rectangular_map(char **map, int width, int height)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while (i < height)
-    {
-        if ((int)ft_strlen(map[i]) != width)
-            return (0);
-        i++;
-    }
-    return (1);
+	i = 0;
+	while (i < height)
+	{
+		if ((int)ft_strlen(map[i]) != width)
+			return (0);
+		i++;
+	}
+	return (1);
 }
-// #include "so_long.h"
 
-// static void flood_fill(char **map, int x, int y, int height, int width)
-// {
-//     if (x < 0 || y < 0 || x >= height || y >= width)
-//         return;
-//     if (map[x][y] == '1' || map[x][y] == 'V')
-//         return;
+//Dup map para poder pasar flood fill:
+char	**dup_map(char **map)
+{
+	int		i;
+	char	**copy;
 
-//     map[x][y] = 'V';
+	i = 0;
+	while (map[i])
+		i++;
+	copy = malloc(sizeof(char *) * (i + 1));
+	if (!copy)
+		return (NULL);
+	i = 0;
+	while (map[i])
+	{
+		copy[i] = ft_strdup(map[i]);
+		if (!copy[i])
+		{
+			while (--i >= 0)
+				free(copy[i]);
+			free(copy);
+			return (NULL);
+		}
+		i++;
+	}
+	copy[i] = NULL;
+	return (copy);
+}
 
-//     flood_fill(map, x + 1, y, height, width);
-//     flood_fill(map, x - 1, y, height, width);
-//     flood_fill(map, x, y + 1, height, width);
-//     flood_fill(map, x, y - 1, height, width);
-// }
+// Find the P for starting position:
+int	find_player(char **map, int *px, int *py)
+{
+	int	y;
+	int	x;
 
-// int valid_path(char **map, int width, int height)
-// {
-//     int x, y;
-//     int player_x = -1, player_y = -1;
+	y = 0;
+	while (map[y])
+	{
+		x = 0;
+		while (map[y][x])
+		{
+			if (map[y][x] == 'P')
+			{
+				*px = x;
+				*py = y;
+				return (1);
+			}
+			x++;
+		}
+		y++;
+	}
+	return (0);
+}
 
-//     // 1️⃣ Buscar la posición inicial del jugador
-//     for (x = 0; x < height; x++)
-//     {
-//         for (y = 0; y < width; y++)
-//         {
-//             if (map[x][y] == 'P')
-//             {
-//                 player_x = x;
-//                 player_y = y;
-//                 break;
-//             }
-//         }
-//         if (player_x != -1) break;
-//     }
+int	valid_path(char **map, int objects)
+{
+	int			reached_c;
+	int			reached_e;
+	t_ff_params	p;
+	t_coord		start;
 
-//     if (player_x == -1)
-//         return (print_error("No starting position found\n"), 0);
-
-//     // 2️⃣ Hacer una copia del mapa porque flood_fill lo modifica
-//     char **map_copy = malloc(sizeof(char *) * (height + 1));
-//     if (!map_copy)
-//         return (0);
-//     for (int i = 0; i < height; i++)
-//         map_copy[i] = ft_strdup(map[i]);
-//     map_copy[height] = NULL;
-
-//     // 3️⃣ Ejecutar flood_fill desde la posición del jugador
-//     flood_fill(map_copy, player_x, player_y, height, width);
-
-//     // 4️⃣ Verificar que todos los 'C' y al menos un 'E' fueron visitados
-//     int exit_found = 0;
-//     for (x = 0; x < height; x++)
-//     {
-//         for (y = 0; y < width; y++)
-//         {
-//             if (map[x][y] == 'C' && map_copy[x][y] != 'V')
-//                 return (free_map(map_copy), print_error("Not all collectibles reachable\n"), 0);
-//             if (map[x][y] == 'E' && map_copy[x][y] == 'V')
-//                 exit_found = 1;
-//         }
-//     }
-
-//     free_map(map_copy);
-//     if (!exit_found)
-//         return (print_error("No valid path to exit\n"), 0);
-//     return (1);
-// }
+	reached_e = 0;
+	start.x = 0;
+	start.y = 0;
+	if (!find_player(map, &start.x, &start.y))
+		return (print_error("No player found for path validation\n"), 0);
+	p.map = dup_map(map);
+	if (!p.map)
+		return (print_error("Malloc failure in valid_path\n"), 0);
+	get_map_dimensions(map, &p.width, &p.height);
+	reached_c = 0;
+	reached_c = 0;
+	p.reach_c = &reached_c;
+	p.reach_e = &reached_e;
+	flood_fill(&p, start.x, start.y);
+	free_map(p.map);
+	if (reached_c != objects)
+		return (print_error("Not all collectibles reachable\n"), 0);
+	if (!reached_e)
+		return (print_error("Exit not reachable\n"), 0);
+	return (1);
+}

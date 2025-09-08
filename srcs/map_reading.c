@@ -47,6 +47,14 @@ static int	count_lines(int fd)
 }
 
 // Lee todas las líneas y elimina el salto de línea final si existe
+
+static void	free_partial_map(char **map, int count)
+{
+	while (count-- > 0)
+		free(map[count]);
+	free(map);
+}
+
 static char	**fill_map(int fd, int lines)
 {
 	char	**map;
@@ -67,9 +75,10 @@ static char	**fill_map(int fd, int lines)
 		if (len > 0 && line[len - 1] == '\n')
 			line[len - 1] = '\0';
 		if (line[0] == '\0')
-			return (free(line), print_error("Map contains empty lines\n"),
-				free_map(map), NULL);
-		map[i++] = line;
+			return (free(line), free_partial_map(map, i),
+				print_error("Map contains empty lines\n"), NULL);
+		map[i] = line;
+		i++;
 	}
 	map[i] = NULL;
 	return (map);
@@ -97,19 +106,4 @@ char	**read_map(char *filename)
 	map = fill_map(fd, lines);
 	close(fd);
 	return (map);
-}
-
-void	free_map(char **map)
-{
-	int	i;
-
-	if (!map)
-		return ;
-	i = 0;
-	while (map[i])
-	{
-		free(map[i]);
-		i++;
-	}
-	free(map);
 }

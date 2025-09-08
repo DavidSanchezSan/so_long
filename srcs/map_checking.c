@@ -126,5 +126,7 @@ int	map_checks(char **map)
 	objects = obj_count(map, width, height);
 	if (objects == 0)
 		return (0);
+	if (!valid_path(map, objects))
+		return (0);
 	return (objects);
 }

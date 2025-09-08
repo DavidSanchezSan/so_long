@@ -19,7 +19,7 @@ int	main(int argc, char **argv)
 
 	if (argc != 2)
 	{
-		print_error("Programme must be launch with 2 arguments.\n");
+		print_error("Program must be launched with 2 arguments.\n");
 		return (1);
 	}
 	if (!ber_extension_validation(argv[1]))
@@ -29,7 +29,10 @@ int	main(int argc, char **argv)
 		return (2);
 	map.objects = map_checks(ber_map);
 	if (map.objects == 0)
+	{
+		free_map(ber_map);
 		return (2);
+	}
 	printf("Map objects: %i\n", map.objects);
 	printf("Mapa cargado:\n");
 	for (int i = 0; ber_map[i] != NULL; i++)

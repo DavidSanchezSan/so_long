@@ -1,0 +1,80 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   map_valid_way.c                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dasanche <dasanche@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/28 15:28:12 by dasanche          #+#    #+#             */
+/*   Updated: 2025/09/01 20:52:06 by dasanche         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "so_long.h"
+
+static void	push(t_stack *stack, int x, int y)
+{
+	stack->arr[stack->top].x = x;
+	stack->arr[stack->top].y = y;
+	stack->top++;
+}
+
+static void	visit(char **map, t_stack *stack, int x, int y)
+{
+	if (map[y][x] != '1' && map[y][x] != 'V') // accesible y no visitado
+		push(stack, x, y);
+}
+
+static t_stack	*init_stack(int w, int h, int start_x, int start_y)
+{
+	t_stack	*stack;
+
+	stack = malloc(sizeof(t_stack));
+	if (!stack)
+		return (NULL);
+	stack->arr = malloc(sizeof(t_coord) * (w * h));
+	if (!stack->arr)
+	{
+		free(stack);
+		return (NULL);
+	}
+	stack->top = 0;
+	push(stack, start_x, start_y);
+	return (stack);
+}
+
+static void	process_cell(char **map, t_coord cell, int *reach_c, int *reach_e)
+{
+	if (map[cell.y][cell.x] == 'C')
+		(*reach_c)++;
+	if (map[cell.y][cell.x] == 'E')
+		*reach_e = 1;
+	map[cell.y][cell.x] = 'V';
+}
+
+void	flood_fill(t_ff_params *p, int start_x, int start_y)
+{
+	t_stack	*stack;
+	t_coord	cur;
+
+	stack = init_stack(p->width, p->height, start_x, start_y);
+	if (!stack)
+		return ;
+	while (stack->top > 0)
+	{
+		cur = stack->arr[--stack->top];
+		if (p->map[cur.y][cur.x] == '1' || p->map[cur.y][cur.x] == 'V')
+			continue ;
+		process_cell(p->map, cur, p->reach_c, p->reach_e);
+		if (cur.x + 1 < p->width)
+			visit(p->map, stack, cur.x + 1, cur.y);
+		if (cur.x - 1 >= 0)
+			visit(p->map, stack, cur.x - 1, cur.y);
+		if (cur.y + 1 < p->height)
+			visit(p->map, stack, cur.x, cur.y + 1);
+		if (cur.y - 1 >= 0)
+			visit(p->map, stack, cur.x, cur.y - 1);
+	}
+	free(stack->arr);
+	free(stack);
+}

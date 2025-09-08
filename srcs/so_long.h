@@ -48,17 +48,41 @@ typedef struct s_map
 	int	initial_pos;
 }	t_map;
 
+//Coordenadas:
+typedef struct s_coord
+{
+	int	x;
+	int	y;
+}	t_coord;
+
+//Stack para revisar el mapa en flood/fill
+// Con coordenadas y top
+typedef struct s_stack
+{
+	t_coord	*arr;
+	int		top;
+}	t_stack;
+
+//Estructura para pasar un gran conjunto de parametros a flood fill:
+typedef struct s_ff_params
+{
+	char	**map;
+	int		width;
+	int		height;
+	int		*reach_c;
+	int		*reach_e;
+}	t_ff_params;
+
+//
 int		key_hook(int keycode, void *param);
 int		close_game(t_game *game);
-// void	move_player(t_game *game, int dx, int dy);
-// char	get_map_cell(int x, int y);
-// void	draw_map(t_game *game);
 //
 int		valid_walls(char **map, int width, int height);
 int		valid_chars(char **map, int width, int height);
 int		exit_init_pos_count(char **map, int width, int height);
 int		exit_count(char **map, int width, int height);
 void	get_map_dimensions(char **map, int *width, int *height);
+int		obj_count(char **map, int width, int height);
 int		map_checks(char **map);
 int		ber_extension_validation(char *name_map);
 void	print_error(char *msg);
@@ -73,10 +97,12 @@ char	*ft_strdup(const char *s);
 char	*get_next_line(int fd);
 
 int		open_file(char *filename);
-// char	**resize_map(int lines_allocated);
 char	**read_map(char *filename);
-// char	**get_map(int fd, int *lines_allocated, char **map);
 void	free_map(char **map);
 
 int		rectangular_map(char **map, int width, int height);
+void	flood_fill(t_ff_params *p, int start_x, int start_y);
+char	**dup_map(char **map);
+int		find_player(char **map, int *px, int *py);
+int		valid_path(char **map, int objects);
 #endif
