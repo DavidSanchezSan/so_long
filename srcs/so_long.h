@@ -19,7 +19,6 @@
 # include <string.h>
 # include <fcntl.h>
 # include <limits.h>
-# include "mlx.h"
 
 # define BUFFER_SIZE 64
 # define WIN_WIDTH 800
@@ -27,16 +26,6 @@
 # define CELL_SIZE 64
 # define MAP_WIDTH 10
 # define MAP_HEIGHT 8
-
-// Estructura para gestionar el estado del juego
-typedef struct s_game
-{
-	void	*mlx; // Conexión con la biblioteca mlx
-	void	*win; // Ventana del juego
-	char	**map; // Mapa del juego
-	int		player_x; // Posición X del jugador
-	int		player_y; // Posición Y del jugador
-}	t_game;
 
 // Estructura para el mapa:
 typedef struct s_map
@@ -63,7 +52,7 @@ typedef struct s_stack
 	int		top;
 }	t_stack;
 
-//Estructura para pasar un gran conjunto de parametros a flood fill:
+//Estructura para pasar un conjunto de parametros a flood fill:
 typedef struct s_ff_params
 {
 	char	**map;
@@ -73,36 +62,33 @@ typedef struct s_ff_params
 	int		*reach_e;
 }	t_ff_params;
 
-//
-int		key_hook(int keycode, void *param);
-int		close_game(t_game *game);
-//
-int		valid_walls(char **map, int width, int height);
+//gnl + gnl_utils
+char	*ft_strdup(const char *s);
+char	*ft_strchr(const char *s, int c);
+size_t	ft_strlen(const char *s);
+char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_substr(char const *s, unsigned int start, size_t len);
+char	*get_next_line(int fd);
+//map_checking
 int		valid_chars(char **map, int width, int height);
+int		valid_walls(char **map, int width, int height);
 int		exit_init_pos_count(char **map, int width, int height);
-int		exit_count(char **map, int width, int height);
-void	get_map_dimensions(char **map, int *width, int *height);
 int		obj_count(char **map, int width, int height);
 int		map_checks(char **map);
-int		ber_extension_validation(char *name_map);
-void	print_error(char *msg);
-char	*ft_strrchr(char *s, int c);
-//gnl
-char	*ft_substr(char const *s, unsigned int start, size_t len);
-char	*ft_strjoin(char const *s1, char const *s2);
-size_t	ft_strlen(const char *s);
-char	*ft_strchr(const char *s, int c);
-char	*ft_strdup(const char *s);
-
-char	*get_next_line(int fd);
-
-int		open_file(char *filename);
+//map_reading
+void	get_map_dimensions(char **map, int *width, int *height);
 char	**read_map(char *filename);
-void	free_map(char **map);
-
-int		rectangular_map(char **map, int width, int height);
+//map_valid_way_flood_fill
 void	flood_fill(t_ff_params *p, int start_x, int start_y);
+//map_valid_way_rectangular
+int		rectangular_map(char **map, int width, int height);
 char	**dup_map(char **map);
 int		find_player(char **map, int *px, int *py);
 int		valid_path(char **map, int objects);
+//utils
+void	print_error(char *msg);
+char	*ft_strrchr(char *s, int c);
+int		ber_extension_validation(char *name_map);
+int		open_file(char *filename);
+void	free_map(char **map);
 #endif
