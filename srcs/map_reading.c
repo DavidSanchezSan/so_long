@@ -28,8 +28,8 @@ void	get_map_dimensions(char **map, int *width, int *height)
 	}
 	*height = i;
 }
-// Cuenta cuántas líneas tiene el archivo
 
+// Cuenta cuántas líneas tiene el archivo:
 static int	count_lines(int fd)
 {
 	int		count;
@@ -46,8 +46,7 @@ static int	count_lines(int fd)
 	return (count);
 }
 
-// Lee todas las líneas y elimina el salto de línea final si existe
-
+//Función auxiliar para liberar el mapa:
 static void	free_partial_map(char **map, int count)
 {
 	while (count-- > 0)
@@ -55,6 +54,7 @@ static void	free_partial_map(char **map, int count)
 	free(map);
 }
 
+// Función para leer linea a linea y eliminar el salto de linea leida:
 static char	**fill_map(int fd, int lines)
 {
 	char	**map;
@@ -84,6 +84,7 @@ static char	**fill_map(int fd, int lines)
 	return (map);
 }
 
+// Función para abrir/leer y devolver el mapa sin saltos de linea:
 char	**read_map(char *filename)
 {
 	int		fd;

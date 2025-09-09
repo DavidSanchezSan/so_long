@@ -12,6 +12,7 @@
 
 #include "so_long.h"
 
+//Función que comprueba que el mapa es rectangular
 int	rectangular_map(char **map, int width, int height)
 {
 	int	i;
@@ -26,7 +27,7 @@ int	rectangular_map(char **map, int width, int height)
 	return (1);
 }
 
-//Dup map para poder pasar flood fill:
+//Función que duplica el mapa para pasar flood-fill (lo modifica)
 char	**dup_map(char **map)
 {
 	int		i;
@@ -55,7 +56,7 @@ char	**dup_map(char **map)
 	return (copy);
 }
 
-// Find the P for starting position:
+//Encuentra P para posicion inicial:
 int	find_player(char **map, int *px, int *py)
 {
 	int	y;
@@ -80,6 +81,7 @@ int	find_player(char **map, int *px, int *py)
 	return (0);
 }
 
+//Función que valida el mapa
 int	valid_path(char **map, int objects)
 {
 	int			reached_c;
@@ -87,6 +89,7 @@ int	valid_path(char **map, int objects)
 	t_ff_params	p;
 	t_coord		start;
 
+	reached_c = 0;
 	reached_e = 0;
 	start.x = 0;
 	start.y = 0;
@@ -94,10 +97,8 @@ int	valid_path(char **map, int objects)
 		return (print_error("No player found for path validation\n"), 0);
 	p.map = dup_map(map);
 	if (!p.map)
-		return (print_error("Malloc failure in valid_path\n"), 0);
+		return (print_error("Malloc failure in path validation"), 0);
 	get_map_dimensions(map, &p.width, &p.height);
-	reached_c = 0;
-	reached_c = 0;
 	p.reach_c = &reached_c;
 	p.reach_e = &reached_e;
 	flood_fill(&p, start.x, start.y);

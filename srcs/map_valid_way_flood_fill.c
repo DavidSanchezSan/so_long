@@ -11,7 +11,9 @@
 /* ************************************************************************** */
 
 #include "so_long.h"
-
+// Esta función guarda los valores x e y en la estructura stack en la
+// posición indicada por stack->top y luego incrementa el índice top para
+// apuntar al siguiente espacio disponible:
 static void	push(t_stack *stack, int x, int y)
 {
 	stack->arr[stack->top].x = x;
@@ -19,12 +21,14 @@ static void	push(t_stack *stack, int x, int y)
 	stack->top++;
 }
 
+//Si la coordenada es visitable y no ha sido visitada es guardada en el stack.
 static void	visit(char **map, t_stack *stack, int x, int y)
 {
-	if (map[y][x] != '1' && map[y][x] != 'V') // accesible y no visitado
+	if (map[y][x] != '1' && map[y][x] != 'V') //Accesible y no visitado
 		push(stack, x, y);
 }
 
+// Inicializa pila de coord. con pos inicial.
 static t_stack	*init_stack(int w, int h, int start_x, int start_y)
 {
 	t_stack	*stack;
@@ -43,6 +47,8 @@ static t_stack	*init_stack(int w, int h, int start_x, int start_y)
 	return (stack);
 }
 
+// PRocesa una celda durante el flood_fill. Cuenta coleccionables,
+// verifica si hay salida y marca como visitada la celda
 static void	process_cell(char **map, t_coord cell, int *reach_c, int *reach_e)
 {
 	if (map[cell.y][cell.x] == 'C')
@@ -52,6 +58,7 @@ static void	process_cell(char **map, t_coord cell, int *reach_c, int *reach_e)
 	map[cell.y][cell.x] = 'V';
 }
 
+// Función flood fill desde una posición inicial en el mapa:
 void	flood_fill(t_ff_params *p, int start_x, int start_y)
 {
 	t_stack	*stack;

@@ -12,12 +12,14 @@
 
 #include "so_long.h"
 
+//Error personalizado
 void	print_error(char *msg)
 {
 	write(2, "Error\n", 6);
 	write(2, msg, ft_strlen(msg));
 }
 
+//Función que busca de atrás adelante un caracter en un string
 char	*ft_strrchr(char *s, int c)
 {
 	char	*last;
@@ -34,6 +36,7 @@ char	*ft_strrchr(char *s, int c)
 	return (last);
 }
 
+// Función que valida si la extensión es .ber
 int	ber_extension_validation(char *name_map)
 {
 	int		i;
@@ -53,22 +56,24 @@ int	ber_extension_validation(char *name_map)
 	if (i < 5 || file_name[i - 4] != '.' || file_name[i - 3] != 'b'
 		|| file_name[i - 2] != 'e' || file_name[i - 1] != 'r')
 	{
-		print_error("Map file must have a name and .ber extension.\n");
+		print_error("Map file must have a name and .ber extensión.\n");
 		return (0);
 	}
 	return (1);
 }
 
+//Función para abrir el archivo del mapa
 int	open_file(char *filename)
 {
 	int	fd;
 
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
-		print_error("Map-file could not be opened\n");
+		print_error("Map-file could not be opened.\n");
 	return (fd);
 }
 
+//Función para liberar el mapa en su totalidad
 void	free_map(char **map)
 {
 	int	i;

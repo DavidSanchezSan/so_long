@@ -12,7 +12,7 @@
 
 #include "so_long.h"
 
-// Todos los caracteres son validos:
+//Todos los caracteres son válidos:
 int	valid_chars(char **map, int width, int height)
 {
 	int	x;
@@ -34,7 +34,7 @@ int	valid_chars(char **map, int width, int height)
 	return (1);
 }
 
-// Todos el mapa esta rodeado de muros:
+//Todo el mapa rodeado de muros:
 int	valid_walls(char **map, int width, int height)
 {
 	int	x;
@@ -49,13 +49,14 @@ int	valid_walls(char **map, int width, int height)
 	x = 0;
 	while (x < height)
 	{
-		if (map[x][0] != '1' || map[x][width - 1] != '1')
+		if (map[x][0] != '1' || map[x][width -1] != '1')
 			return (0);
 		x++;
 	}
 	return (1);
 }
-// Conteo de salida/objeto/posicion_inicial:
+
+//Conteo de salida/objetos/posición_inicial:
 
 int	exit_init_pos_count(char **map, int width, int height)
 {
@@ -86,6 +87,7 @@ int	exit_init_pos_count(char **map, int width, int height)
 	return (1);
 }
 
+// Conteo de objetos:
 int	obj_count(char **map, int width, int height)
 {
 	int	x;
@@ -108,7 +110,7 @@ int	obj_count(char **map, int width, int height)
 	return (obj_count);
 }
 
-// Chequeos del mapa:
+//Chequeos del mapa:
 int	map_checks(char **map)
 {
 	int	width;

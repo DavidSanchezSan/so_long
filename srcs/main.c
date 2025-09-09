@@ -16,14 +16,16 @@ int	main(int argc, char **argv)
 {
 	char	**ber_map;
 	t_map	map;
+	int		i;
 
+	i = 0;
 	if (argc != 2)
 	{
 		print_error("Program must be launched with 2 arguments.\n");
 		return (1);
 	}
 	if (!ber_extension_validation(argv[1]))
-		exit(1);
+		exit (1);
 	ber_map = read_map(argv[1]);
 	if (!ber_map)
 		return (2);
@@ -31,12 +33,15 @@ int	main(int argc, char **argv)
 	if (map.objects == 0)
 	{
 		free_map(ber_map);
-		return (2);
+		return (3);
 	}
 	printf("Map objects: %i\n", map.objects);
 	printf("Mapa cargado:\n");
-	for (int i = 0; ber_map[i] != NULL; i++)
+	while (ber_map[i] != NULL)
+	{
 		printf("%s\n", ber_map[i]);
+		i++;
+	}
 	printf("\n");
 	free_map(ber_map);
 	return (0);
