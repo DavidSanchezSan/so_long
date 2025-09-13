@@ -70,17 +70,17 @@ void	flood_fill(t_ff_params *p, int start_x, int start_y)
 	while (stack->top > 0)
 	{
 		cur = stack->arr[--stack->top];
-		if (p->map[cur.y][cur.x] == '1' || p->map[cur.y][cur.x] == 'V')
+		if (p->data_map->map[cur.y][cur.x] == '1' || p->data_map->map[cur.y][cur.x] == 'V')
 			continue ;
-		process_cell(p->map, cur, p->reach_c, p->reach_e);
+		process_cell(p->data_map->map, cur, &p->reach_c, &p->reach_e);
 		if (cur.x + 1 < p->width)
-			visit(p->map, stack, cur.x + 1, cur.y);
+			visit(p->data_map->map, stack, cur.x + 1, cur.y);
 		if (cur.x - 1 >= 0)
-			visit(p->map, stack, cur.x - 1, cur.y);
+			visit(p->data_map->map, stack, cur.x - 1, cur.y);
 		if (cur.y + 1 < p->height)
-			visit(p->map, stack, cur.x, cur.y + 1);
+			visit(p->data_map->map, stack, cur.x, cur.y + 1);
 		if (cur.y - 1 >= 0)
-			visit(p->map, stack, cur.x, cur.y - 1);
+			visit(p->data_map->map, stack, cur.x, cur.y - 1);
 	}
 	free(stack->arr);
 	free(stack);

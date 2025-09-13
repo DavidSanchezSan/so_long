@@ -6,7 +6,7 @@
 /*   By: dasanche <dasanche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 10:11:35 by dasanche          #+#    #+#             */
-/*   Updated: 2025/08/28 18:23:42 by dasanche         ###   ########.fr       */
+/*   Updated: 2025/09/13 15:56:29 by dasanche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,30 +82,26 @@ int	find_player(char **map, int *px, int *py)
 }
 
 //Función que valida el mapa
-int	valid_path(char **map, int objects)
+int	valid_path(t_ff_params *game)
 {
-	int			reached_c;
-	int			reached_e;
-	t_ff_params	p;
-	t_coord		start;
+	t_ff_params	*copy_game;
 
-	reached_c = 0;
-	reached_e = 0;
-	start.x = 0;
-	start.y = 0;
-	if (!find_player(map, &start.x, &start.y))
+	copy_game = NULL;
+	copy_game = init_game(copy_game);
+	if (!find_player(game->data_map->map, &game->data_map->initial_pos.x, &game->data_map->initial_pos.y))
 		return (print_error("No player found for path validation\n"), 0);
-	p.map = dup_map(map);
-	if (!p.map)
+	copy_game->data_map->map = dup_map(game->data_map->map);
+	if (!copy_game->data_map->map)
 		return (print_error("Malloc failure in path validation"), 0);
-	get_map_dimensions(map, &p.width, &p.height);
-	p.reach_c = &reached_c;
-	p.reach_e = &reached_e;
-	flood_fill(&p, start.x, start.y);
-	free_map(p.map);
-	if (reached_c != objects)
+	copy_game->height = game->height;
+	copy_game->width = game->width;
+	copy_game->data_map->initial_pos.x = game->data_map->initial_pos.x;
+	copy_game->data_map->initial_pos.y = game->data_map->initial_pos.y;
+	flood_fill(copy_game, copy_game->data_map->initial_pos.x, copy_game->data_map->initial_pos.y);
+	free_map(copy_game->data_map->map);
+	if (copy_game->reach_c != game->data_map->objects)
 		return (print_error("Not all collectibles reachable\n"), 0);
-	if (!reached_e)
+	if (!copy_game->reach_e)
 		return (print_error("Exit not reachable\n"), 0);
 	return (1);
 }

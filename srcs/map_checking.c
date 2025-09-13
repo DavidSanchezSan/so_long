@@ -6,7 +6,7 @@
 /*   By: dasanche <dasanche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 18:07:19 by dasanche          #+#    #+#             */
-/*   Updated: 2025/08/28 16:54:21 by dasanche         ###   ########.fr       */
+/*   Updated: 2025/09/13 14:22:34 by dasanche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	valid_walls(char **map, int width, int height)
 	return (1);
 }
 
-//Conteo de salida/objetos/posición_inicial:
+//Conteo de salida/objetos/posición_inicial (REVISAR COMPATIBILIDAD CON FIND_PLAYER):
 
 int	exit_init_pos_count(char **map, int width, int height)
 {
@@ -88,47 +88,42 @@ int	exit_init_pos_count(char **map, int width, int height)
 }
 
 // Conteo de objetos:
-int	obj_count(char **map, int width, int height)
+void	obj_count(t_ff_params *game)
 {
 	int	x;
 	int	y;
-	int	obj_count;
 
 	y = 0;
-	obj_count = 0;
-	while (y < height)
+	game->data_map->objects = 0;
+	while (y < game->height)
 	{
 		x = 0;
-		while (x < width)
+		while (x < game->width)
 		{
-			if (map[y][x] == 'C')
-				obj_count++;
+			if (game->data_map->map[y][x] == 'C')
+				game->data_map->objects++;
 			x++;
 		}
 		y++;
 	}
-	return (obj_count);
 }
 
 //Chequeos del mapa:
-int	map_checks(char **map)
+int	map_checks(t_ff_params *game)
 {
-	int	width;
-	int	height;
-	int	objects;
 
-	get_map_dimensions(map, &width, &height);
-	if (rectangular_map(map, width, height) != 1)
+	get_map_dimensions(game->data_map->map, &game->width, &game->height);
+	if (rectangular_map(game->data_map->map, game->width, game->height) != 1)
 		return (print_error("Map must be rectangular only\n"), 0);
-	if (!valid_walls(map, width, height) || !valid_chars(map, width, height))
+	if (!valid_walls(game->data_map->map, game->width, game->height) || !valid_chars(game->data_map->map, game->width, game->height))
 		return (print_error("Map not enclosed by walls or has invalid chars\n"),
 			0);
-	if (exit_init_pos_count(map, width, height) == 0)
+	if (exit_init_pos_count(game->data_map->map, game->width, game->height) == 0)
 		return (0);
-	objects = obj_count(map, width, height);
-	if (objects == 0)
+	obj_count(game);
+	if (game->data_map->objects == 0)
 		return(print_error("Map has no objects\n"), (0));
-	if (!valid_path(map, objects))
+	if (!valid_path(game))
 		return (0);
-	return (objects);
+	return (1);
 }

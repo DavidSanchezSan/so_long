@@ -6,7 +6,7 @@
 /*   By: dasanche <dasanche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 12:21:43 by dasanche          #+#    #+#             */
-/*   Updated: 2025/08/23 17:16:51 by dasanche         ###   ########.fr       */
+/*   Updated: 2025/09/13 13:52:05 by dasanche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ static char	**fill_map(int fd, int lines)
 }
 
 // Función para abrir/leer y devolver el mapa sin saltos de linea:
-char	**read_map(char *filename)
+char	**read_map(char *filename, t_ff_params	*game)
 {
 	int		fd;
 	int		lines;
@@ -106,5 +106,6 @@ char	**read_map(char *filename)
 		return (NULL);
 	map = fill_map(fd, lines);
 	close(fd);
+	game->data_map->map = map;
 	return (map);
 }

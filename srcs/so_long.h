@@ -6,7 +6,7 @@
 /*   By: dasanche <dasanche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 10:31:52 by dasanche          #+#    #+#             */
-/*   Updated: 2025/08/28 18:54:22 by dasanche         ###   ########.fr       */
+/*   Updated: 2025/09/13 15:26:23 by dasanche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,22 +27,23 @@
 # define MAP_WIDTH 10
 # define MAP_HEIGHT 8
 
-// Estructura para el mapa:
-typedef struct s_map
-{
-	int	x; // Eje x (columnas)
-	int	y; // Eje y (Filas)
-	int	objects; // Objetos
-	int	exits; // Salidas
-	int	initial_pos;
-}	t_map;
-
 //Coordenadas:
 typedef struct s_coord
 {
 	int	x;
 	int	y;
 }	t_coord;
+
+// Estructura para el mapa:
+typedef struct s_map
+{
+	char	**map;
+	int		x; // Eje x (columnas)
+	int		y; // Eje y (Filas)
+	int		objects; // Objetos
+	int		exits; // Salidas
+	t_coord	initial_pos; // Posición inicial
+}	t_map;
 
 //Stack para revisar el mapa en flood/fill
 // Con coordenadas y top
@@ -55,13 +56,15 @@ typedef struct s_stack
 //Estructura para pasar un conjunto de parametros a flood fill:
 typedef struct s_ff_params
 {
-	char	**map;
+	t_map	*data_map;
 	int		width;
 	int		height;
-	int		*reach_c;
-	int		*reach_e;
+	int		reach_c;
+	int		reach_e;
 }	t_ff_params;
 
+//main
+t_ff_params	*init_game(t_ff_params *game);
 //gnl + gnl_utils
 char	*ft_strdup(const char *s);
 char	*ft_strchr(const char *s, int c);
@@ -73,18 +76,18 @@ char	*get_next_line(int fd);
 int		valid_chars(char **map, int width, int height);
 int		valid_walls(char **map, int width, int height);
 int		exit_init_pos_count(char **map, int width, int height);
-int		obj_count(char **map, int width, int height);
-int		map_checks(char **map);
+void	obj_count(t_ff_params *game);
+int		map_checks(t_ff_params *game);
 //map_reading
 void	get_map_dimensions(char **map, int *width, int *height);
-char	**read_map(char *filename);
+char	**read_map(char *filename, t_ff_params	*game);
 //map_valid_way_flood_fill
 void	flood_fill(t_ff_params *p, int start_x, int start_y);
 //map_valid_way_rectangular
 int		rectangular_map(char **map, int width, int height);
 char	**dup_map(char **map);
 int		find_player(char **map, int *px, int *py);
-int		valid_path(char **map, int objects);
+int		valid_path(t_ff_params *game);
 //utils
 void	print_error(char *msg);
 char	*ft_strrchr(char *s, int c);
