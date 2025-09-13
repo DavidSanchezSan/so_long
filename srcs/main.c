@@ -31,10 +31,7 @@ int	main(int argc, char **argv)
 		return (2);
 	map.objects = map_checks(ber_map);
 	if (map.objects == 0)
-	{
-		free_map(ber_map);
-		return (3);
-	}
+		return(free_map(ber_map), (3));
 	printf("Map objects: %i\n", map.objects);
 	printf("Mapa cargado:\n");
 	while (ber_map[i] != NULL)

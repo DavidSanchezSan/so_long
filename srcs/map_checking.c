@@ -127,7 +127,7 @@ int	map_checks(char **map)
 		return (0);
 	objects = obj_count(map, width, height);
 	if (objects == 0)
-		return (0);
+		return(print_error("Map has no objects\n"), (0));
 	if (!valid_path(map, objects))
 		return (0);
 	return (objects);
