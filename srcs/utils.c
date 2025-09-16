@@ -6,20 +6,20 @@
 /*   By: dasanche <dasanche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 11:07:13 by dasanche          #+#    #+#             */
-/*   Updated: 2025/08/24 17:41:02 by dasanche         ###   ########.fr       */
+/*   Updated: 2025/09/16 13:52:16 by dasanche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-//Error personalizado
+// Error personalizado
 void	print_error(char *msg)
 {
 	write(2, "Error\n", 6);
 	write(2, msg, ft_strlen(msg));
 }
 
-//Función que busca de atrás adelante un caracter en un string
+// Función que busca de atrás adelante un caracter en un string
 char	*ft_strrchr(char *s, int c)
 {
 	char	*last;
@@ -62,7 +62,7 @@ int	ber_extension_validation(char *name_map)
 	return (1);
 }
 
-//Función para abrir el archivo del mapa
+// Función para abrir el archivo del mapa
 int	open_file(char *filename)
 {
 	int	fd;
@@ -73,7 +73,7 @@ int	open_file(char *filename)
 	return (fd);
 }
 
-//Función para liberar el mapa en su totalidad
+// Función para liberar el mapa en su totalidad
 void	free_map(char **map)
 {
 	int	i;

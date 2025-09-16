@@ -6,13 +6,13 @@
 /*   By: dasanche <dasanche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 10:11:35 by dasanche          #+#    #+#             */
-/*   Updated: 2025/09/13 15:56:29 by dasanche         ###   ########.fr       */
+/*   Updated: 2025/09/16 14:05:28 by dasanche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-//Función que comprueba que el mapa es rectangular
+// Función que comprueba que el mapa es rectangular
 int	rectangular_map(char **map, int width, int height)
 {
 	int	i;
@@ -27,7 +27,7 @@ int	rectangular_map(char **map, int width, int height)
 	return (1);
 }
 
-//Función que duplica el mapa para pasar flood-fill (lo modifica)
+// Función que duplica el mapa para pasar flood-fill (lo modifica)
 char	**dup_map(char **map)
 {
 	int		i;
@@ -56,7 +56,7 @@ char	**dup_map(char **map)
 	return (copy);
 }
 
-//Encuentra P para posicion inicial:
+// Encuentra P para posicion inicial:
 int	find_player(char **map, int *px, int *py)
 {
 	int	y;
@@ -81,27 +81,32 @@ int	find_player(char **map, int *px, int *py)
 	return (0);
 }
 
-//Función que valida el mapa
+// Función que valida el mapa
 int	valid_path(t_ff_params *game)
 {
 	t_ff_params	*copy_game;
 
-	copy_game = NULL;
-	copy_game = init_game(copy_game);
-	if (!find_player(game->data_map->map, &game->data_map->initial_pos.x, &game->data_map->initial_pos.y))
-		return (print_error("No player found for path validation\n"), 0);
+	copy_game = init_game(NULL);
+	if (!find_player(game->data_map->map, &game->data_map->initial_pos.x,
+			&game->data_map->initial_pos.y))
+		return (free_map_structs(copy_game),
+			print_error("No player found for path validation\n"), 0);
 	copy_game->data_map->map = dup_map(game->data_map->map);
 	if (!copy_game->data_map->map)
-		return (print_error("Malloc failure in path validation"), 0);
+		return (free_map_structs(copy_game),
+			print_error("Malloc failure in path validation"), 0);
 	copy_game->height = game->height;
 	copy_game->width = game->width;
 	copy_game->data_map->initial_pos.x = game->data_map->initial_pos.x;
 	copy_game->data_map->initial_pos.y = game->data_map->initial_pos.y;
-	flood_fill(copy_game, copy_game->data_map->initial_pos.x, copy_game->data_map->initial_pos.y);
-	free_map(copy_game->data_map->map);
+	flood_fill(copy_game, copy_game->data_map->initial_pos.x,
+		copy_game->data_map->initial_pos.y);
 	if (copy_game->reach_c != game->data_map->objects)
-		return (print_error("Not all collectibles reachable\n"), 0);
+		return (free_map_structs(copy_game),
+			print_error("Not all collectibles reachable\n"), 0);
 	if (!copy_game->reach_e)
-		return (print_error("Exit not reachable\n"), 0);
+		return (free_map_structs(copy_game),
+			print_error("Exit not reachable\n"), 0);
+	free_map_structs(copy_game);
 	return (1);
 }

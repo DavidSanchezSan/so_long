@@ -6,7 +6,7 @@
 /*   By: dasanche <dasanche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 15:02:14 by dasanche          #+#    #+#             */
-/*   Updated: 2025/03/26 15:49:33 by dasanche         ###   ########.fr       */
+/*   Updated: 2025/09/16 13:54:00 by dasanche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,8 +104,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	char		*subs;
-	size_t		i;
+	char	*subs;
+	size_t	i;
 
 	i = 0;
 	if (s == NULL || start >= ft_strlen(s) || len <= 0)
@@ -119,7 +119,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	if (len >= ft_strlen(s))
 		len = ft_strlen(s) - start;
 	if (len + start > ft_strlen(s))
-		subs = malloc(len * sizeof(char));
+		subs = malloc(len * sizeof(char) + 1);
 	else
 		subs = malloc((len + 1) * sizeof(char));
 	if (subs == NULL)

@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "so_long.h"
+
 // Esta función guarda los valores x e y en la estructura stack en la
 // posición indicada por stack->top y luego incrementa el índice top para
 // apuntar al siguiente espacio disponible:
@@ -21,10 +22,10 @@ static void	push(t_stack *stack, int x, int y)
 	stack->top++;
 }
 
-//Si la coordenada es visitable y no ha sido visitada es guardada en el stack.
+// Si la coordenada es visitable y no ha sido visitada es guardada en el stack.
 static void	visit(char **map, t_stack *stack, int x, int y)
 {
-	if (map[y][x] != '1' && map[y][x] != 'V') //Accesible y no visitado
+	if (map[y][x] != '1' && map[y][x] != 'V') // Accesible y no visitado
 		push(stack, x, y);
 }
 
@@ -70,7 +71,8 @@ void	flood_fill(t_ff_params *p, int start_x, int start_y)
 	while (stack->top > 0)
 	{
 		cur = stack->arr[--stack->top];
-		if (p->data_map->map[cur.y][cur.x] == '1' || p->data_map->map[cur.y][cur.x] == 'V')
+		if (p->data_map->map[cur.y][cur.x] == '1'
+			|| p->data_map->map[cur.y][cur.x] == 'V')
 			continue ;
 		process_cell(p->data_map->map, cur, &p->reach_c, &p->reach_e);
 		if (cur.x + 1 < p->width)
