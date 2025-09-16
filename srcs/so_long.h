@@ -6,7 +6,7 @@
 /*   By: dasanche <dasanche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 10:31:52 by dasanche          #+#    #+#             */
-/*   Updated: 2025/09/16 14:12:29 by dasanche         ###   ########.fr       */
+/*   Updated: 2025/09/16 16:05:36 by dasanche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ typedef struct s_ff_params
 	int		height;
 	int		reach_c;
 	int		reach_e;
+	void	*mlx;
+	void	*mlx_win;
 }			t_ff_params;
 
 // main

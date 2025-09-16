@@ -6,7 +6,7 @@
 /*   By: dasanche <dasanche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 18:07:19 by dasanche          #+#    #+#             */
-/*   Updated: 2025/09/16 14:12:13 by dasanche         ###   ########.fr       */
+/*   Updated: 2025/09/16 16:05:16 by dasanche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,38 @@ t_ff_params	*init_game(t_ff_params *game)
 	game->height = 0;
 	game->reach_c = 0;
 	game->reach_e = 0;
+	game->mlx = NULL;
+	game->mlx_win = NULL;
 	return (game);
+}
+
+int	close_window(t_ff_params *game)
+{
+	mlx_destroy_window(game->mlx, game->mlx_win);
+	free(game->mlx);
+	free_map_structs(game);
+	game->mlx = NULL;
+	game->mlx_win = NULL;
+	return (0);
+}
+
+int key_handler(int keycode, t_ff_params *game)
+{
+	(void)game;
+	printf("%i", keycode);
+    if (keycode == 65307)
+        close_window(game);
+    else if (keycode == 0 || keycode == 123)
+        printf("LEFT (A / ARROW_LEFT)");
+    else if (keycode == 2 || keycode == 124)
+        printf("RIGHT (D / ARROW_RIGHT)");
+    else if (keycode == 1 || keycode == 125)
+        printf("DOWN (S / ARROW_DOWN)");
+    else if (keycode == 13 || keycode == 126)
+        printf("LEFT (A / ARROW_LEFT)");
+    else
+        printf("%d\n", keycode);
+    return (0);
 }
 
 int	main(int argc, char **argv)
@@ -69,8 +100,7 @@ int	main(int argc, char **argv)
 	t_ff_params	*game;
 	int			i;
 
-	// void	*mlx;
-	// void	*mlx_win;
+	
 	i = 0;
 	game = NULL;
 	if (argc != 2)
@@ -87,10 +117,13 @@ int	main(int argc, char **argv)
 	if (map_checks(game) != 1)
 		return (free_map_structs(game), (3));
 	print_map(game);
-	// mlx = mlx_init();
-	// Lógica del juego:
-	// mlx_win = mlx_new_window(mlx, 1920, 1080, "Hello world!");
-	// mlx_loop(mlx);
+	game->mlx = mlx_init();
+	//Lógica del juego:
+	game->mlx_win = mlx_new_window(game->mlx, 1920, 1080, "So_Long");
+	// mlx_hook(game->mlx_win, 2, 1L<<0, close_window, &game);
+	mlx_key_hook(game->mlx_win, key_handler, game);
+	// mlx_loop_end(game);
+	mlx_loop(game->mlx);
 	free_map_structs(game);
 	return (0);
 }
