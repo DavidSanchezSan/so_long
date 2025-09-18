@@ -70,9 +70,19 @@ t_ff_params	*init_game(t_ff_params *game)
 int	close_window(t_ff_params *game)
 {
 	if (game->mlx && game->mlx_win)
+	{
 		mlx_destroy_window(game->mlx, game->mlx_win);
-	game->mlx_win = NULL;
+		game->mlx_win = NULL;
+	}
 	mlx_loop_end(game->mlx);
+	if (game->mlx)
+	{
+		mlx_destroy_display(game->mlx);
+		free(game->mlx);
+		game->mlx = NULL;
+	}
+	free_map_structs(game);
+	exit(0);
 	return (0);
 }
 
@@ -97,7 +107,13 @@ int	key_handler(int keycode, t_ff_params *game)
 	{
 		printf("%d\n", keycode);
 	}
-	fflush(stdout); //BORRAR!!!!
+	return (0);
+}
+
+int	mouse_handler(int button, int x, int y, t_ff_params *game)
+{
+	(void)game;
+	printf("Mouse button %d clicked at (%d, %d)\n", button, x, y);
 	return (0);
 }
 
@@ -121,15 +137,26 @@ int	main(int argc, char **argv)
 		return (free_map_structs(game), (3));
 	print_map(game);
 	game->mlx = mlx_init();
+	if(!game->mlx)
+	{
+		free_map_structs(game);
+		print_error("Error initializing MLX\n");
+		exit(1);
+	}
 	//Lógica del juego:
 	game->mlx_win = mlx_new_window(game->mlx, WIN_WIDTH, WIN_HEIGHT, "So_Long");
+	if(!game->mlx_win)
+	{
+		free_map_structs(game);
+		print_error("Error creating window\n");
+		mlx_destroy_display(game->mlx);
+		free(game->mlx);
+		exit(1);
+	}
 	mlx_hook(game->mlx_win, 2, 1L << 0, key_handler, game); // Hook para teclas
+	mlx_hook(game->mlx_win, 4, 1L << 2, mouse_handler, game); // Hook para ratón
 	mlx_hook(game->mlx_win, 17, 0, close_window, game); //Hook de cerrar ventana
 	// mlx_loop_hook(mlx, render_frame, game);  // Lógica de renderizado
 	mlx_loop(game->mlx);
-	mlx_loop_end(game);
-	mlx_destroy_display(game->mlx);
-	free(game->mlx);
-	free_map_structs(game);
 	return (0);
 }
