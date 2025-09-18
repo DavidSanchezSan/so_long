@@ -2,9 +2,9 @@ NAME = so_long
 
 CC = cc
 
-CFLAGS = -g -Wall -Wextra -Werror -I srcs/minilibx-linux
+CFLAGS = -g -Wall -Wextra -Werror -I minilibx-linux
 
-MLX = -Lsrcs/minilibx-linux -lmlx -lX11 -lXext -lbsd
+MLX = -Lminilibx-linux -lmlx -lX11 -lXext -lbsd
 
 SRC = srcs/get_next_line_utils.c srcs/get_next_line.c srcs/main.c srcs/map_checking.c srcs/map_reading.c srcs/map_valid_way_flood_fill.c srcs/map_valid_way_rectangular.c srcs/utils.c 
 
@@ -36,4 +36,4 @@ re: fclean $(NAME)
 # Regla para compilar MiniLibX
 libmlx:
 	@echo "Compilando MiniLibX..."
-	@make -C srcs/minilibx-linux
+	@make -C minilibx-linux

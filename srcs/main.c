@@ -56,6 +56,7 @@ t_ff_params	*init_game(t_ff_params *game)
 		print_error("Failed memory allocation for game params\n");
 		return (NULL);
 	}
+	game->data_map = NULL;
 	game->data_map = init_map(game->data_map);
 	game->width = 0;
 	game->height = 0;
@@ -68,40 +69,42 @@ t_ff_params	*init_game(t_ff_params *game)
 
 int	close_window(t_ff_params *game)
 {
-	mlx_destroy_window(game->mlx, game->mlx_win);
-	free(game->mlx);
-	free_map_structs(game);
-	game->mlx = NULL;
+	if (game->mlx && game->mlx_win)
+		mlx_destroy_window(game->mlx, game->mlx_win);
 	game->mlx_win = NULL;
+	mlx_loop_end(game->mlx);
 	return (0);
 }
 
-int key_handler(int keycode, t_ff_params *game)
+int	key_handler(int keycode, t_ff_params *game)
 {
 	(void)game;
-	printf("%i", keycode);
-    if (keycode == 65307)
-        close_window(game);
-    else if (keycode == 0 || keycode == 123)
-        printf("LEFT (A / ARROW_LEFT)");
-    else if (keycode == 2 || keycode == 124)
-        printf("RIGHT (D / ARROW_RIGHT)");
-    else if (keycode == 1 || keycode == 125)
-        printf("DOWN (S / ARROW_DOWN)");
-    else if (keycode == 13 || keycode == 126)
-        printf("LEFT (A / ARROW_LEFT)");
-    else
-        printf("%d\n", keycode);
-    return (0);
+	if (keycode == 65307)
+	{
+		printf("CLOSE GAME\n");
+		printf("%i\n", keycode);
+		close_window(game);
+	}
+	else if (keycode == 97 || keycode == 65361)
+		printf("LEFT (A / ARROW_LEFT)\n");
+	else if (keycode == 119 || keycode == 65362)
+		printf("UP (W / ARROW_UP)\n");
+	else if (keycode == 100 || keycode == 65363)
+		printf("RIGHT (D / ARROW_RIGHT)\n");
+	else if (keycode == 115 || keycode == 65364)
+		printf("DOWN (S / ARROW_DOWN)\n");
+	else
+	{
+		printf("%d\n", keycode);
+	}
+	fflush(stdout); //BORRAR!!!!
+	return (0);
 }
 
 int	main(int argc, char **argv)
 {
 	t_ff_params	*game;
-	int			i;
 
-	
-	i = 0;
 	game = NULL;
 	if (argc != 2)
 	{
@@ -119,11 +122,14 @@ int	main(int argc, char **argv)
 	print_map(game);
 	game->mlx = mlx_init();
 	//Lógica del juego:
-	game->mlx_win = mlx_new_window(game->mlx, 1920, 1080, "So_Long");
-	// mlx_hook(game->mlx_win, 2, 1L<<0, close_window, &game);
-	mlx_key_hook(game->mlx_win, key_handler, game);
-	// mlx_loop_end(game);
+	game->mlx_win = mlx_new_window(game->mlx, WIN_WIDTH, WIN_HEIGHT, "So_Long");
+	mlx_hook(game->mlx_win, 2, 1L << 0, key_handler, game); // Hook para teclas
+	mlx_hook(game->mlx_win, 17, 0, close_window, game); //Hook de cerrar ventana
+	// mlx_loop_hook(mlx, render_frame, game);  // Lógica de renderizado
 	mlx_loop(game->mlx);
+	mlx_loop_end(game);
+	mlx_destroy_display(game->mlx);
+	free(game->mlx);
 	free_map_structs(game);
 	return (0);
 }

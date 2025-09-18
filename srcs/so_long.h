@@ -24,9 +24,6 @@
 # define BUFFER_SIZE 64
 # define WIN_WIDTH 800
 # define WIN_HEIGHT 600
-# define CELL_SIZE 64
-# define MAP_WIDTH 10
-# define MAP_HEIGHT 8
 
 // Coordenadas:
 typedef struct s_coord
@@ -39,11 +36,11 @@ typedef struct s_coord
 typedef struct s_map
 {
 	char	**map;
-	int x;               // Eje x (columnas)
-	int y;               // Eje y (Filas)
-	int objects;         // Objetos
-	int exits;           // Salidas
-	t_coord initial_pos; // Posición inicial
+	int		x;               // Eje x (columnas)
+	int		y;               // Eje y (Filas)
+	int		objects;         // Objetos
+	int		exits;           // Salidas
+	t_coord	initial_pos; // Posición inicial
 }			t_map;
 
 // Stack para revisar el mapa en flood/fill

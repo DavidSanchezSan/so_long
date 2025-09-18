@@ -12,6 +12,23 @@
 
 #include "so_long.h"
 
+// Dimensiones del mapa:
+void	get_map_dimensions(char **map, int *width, int *height)
+{
+	int	i;
+
+	*width = 0;
+	*height = 0;
+	i = 0;
+	while (map[i] != NULL)
+	{
+		if ((int)ft_strlen(map[i]) > *width)
+			*width = ft_strlen(map[i]);
+		i++;
+	}
+	*height = i;
+}
+
 // Función que comprueba que el mapa es rectangular
 int	rectangular_map(char **map, int width, int height)
 {
