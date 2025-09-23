@@ -6,7 +6,7 @@
 /*   By: dasanche <dasanche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 10:31:52 by dasanche          #+#    #+#             */
-/*   Updated: 2025/09/16 16:05:36 by dasanche         ###   ########.fr       */
+/*   Updated: 2025/09/23 14:46:48 by dasanche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@
 # include <unistd.h>
 
 # define BUFFER_SIZE 64
-# define WIN_WIDTH 800
-# define WIN_HEIGHT 600
 
 // Coordenadas:
 typedef struct s_coord
@@ -36,10 +34,10 @@ typedef struct s_coord
 typedef struct s_map
 {
 	char	**map;
-	int		x;               // Eje x (columnas)
-	int		y;               // Eje y (Filas)
-	int		objects;         // Objetos
-	int		exits;           // Salidas
+	int		x; // Eje x (columnas)
+	int		y; // Eje y (Filas)
+	int		objects; // Objetos
+	int		exits; // Salidas
 	t_coord	initial_pos; // Posición inicial
 }			t_map;
 
@@ -59,8 +57,17 @@ typedef struct s_ff_params
 	int		height;
 	int		reach_c;
 	int		reach_e;
+	
 	void	*mlx;
 	void	*mlx_win;
+	int		tile_size;
+
+	void	*image_wall;
+	// void	*image_floor;
+	// void	*image_player;
+	// void	*image_collectible;
+	// void	*image_exit;
+	
 }			t_ff_params;
 
 // main

@@ -6,7 +6,7 @@
 /*   By: dasanche <dasanche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 18:07:19 by dasanche          #+#    #+#             */
-/*   Updated: 2025/09/16 16:05:16 by dasanche         ###   ########.fr       */
+/*   Updated: 2025/09/23 14:57:58 by dasanche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,8 @@ t_ff_params	*init_game(t_ff_params *game)
 	game->reach_e = 0;
 	game->mlx = NULL;
 	game->mlx_win = NULL;
+	game->tile_size = 200;
+	game->image_wall = NULL;
 	return (game);
 }
 
@@ -89,6 +91,7 @@ int	close_window(t_ff_params *game)
 int	key_handler(int keycode, t_ff_params *game)
 {
 	(void)game;
+	printf("%i\n", keycode);
 	if (keycode == 65307)
 	{
 		printf("CLOSE GAME\n");
@@ -116,7 +119,41 @@ int	mouse_handler(int button, int x, int y, t_ff_params *game)
 	printf("Mouse button %d clicked at (%d, %d)\n", button, x, y);
 	return (0);
 }
+// ########################################################################################
+void	*load_image(const char *filename, int *image_width, t_ff_params *game)
+{
+	void *img = mlx_xpm_file_to_image(game->mlx, (char *) filename, image_width, image_width);
+	if (!img)
+	{
+	    printf("Error al cargar la imagen XPM\n");
+	    exit(1);
+	}
+	return (img);
+}
 
+void	init_images(t_ff_params *game)
+{
+	game->image_wall = load_image("Estrellita.xpm", &game->tile_size, game);
+	// game->image_floor =
+	// game->image_player =
+	// game->image_collectible =
+	// game->image_exit =
+}
+
+void	render_map(t_ff_params *game, char **map)
+{
+	for (int i = 0; map[i]; i++)
+	{
+		for (int x = 0; map[i][x]; x++)
+		{
+			if (map[i][x] == '1')
+			{
+				mlx_put_image_to_window(game->mlx, game->mlx_win, game->image_wall, x * game->tile_size, i * game->tile_size);
+			}
+		}
+	}
+}
+// ########################################################################################
 int	main(int argc, char **argv)
 {
 	t_ff_params	*game;
@@ -137,15 +174,15 @@ int	main(int argc, char **argv)
 		return (free_map_structs(game), (3));
 	print_map(game);
 	game->mlx = mlx_init();
-	if(!game->mlx)
+	if (!game->mlx)
 	{
 		free_map_structs(game);
 		print_error("Error initializing MLX\n");
 		exit(1);
 	}
 	//Lógica del juego:
-	game->mlx_win = mlx_new_window(game->mlx, WIN_WIDTH, WIN_HEIGHT, "So_Long");
-	if(!game->mlx_win)
+	game->mlx_win = mlx_new_window(game->mlx, game->width * game->tile_size, game->height * game->tile_size, "So_Long");
+	if (!game->mlx_win)
 	{
 		free_map_structs(game);
 		print_error("Error creating window\n");
@@ -153,6 +190,8 @@ int	main(int argc, char **argv)
 		free(game->mlx);
 		exit(1);
 	}
+	init_images(game);
+	render_map(game, game->data_map->map);
 	mlx_hook(game->mlx_win, 2, 1L << 0, key_handler, game); // Hook para teclas
 	mlx_hook(game->mlx_win, 4, 1L << 2, mouse_handler, game); // Hook para ratón
 	mlx_hook(game->mlx_win, 17, 0, close_window, game); //Hook de cerrar ventana

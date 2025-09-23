@@ -3,7 +3,7 @@ NAME = so_long
 
 # Compilador y flags:
 CC = cc
-CFLAGS = -g -Wall -Wextra -Werror -I minilibx-linux
+CFLAGS = -g -I minilibx-linux
 
 # Librerías externas:
 MLX = -Lminilibx-linux -lmlx -lX11 -lXext -lbsd
