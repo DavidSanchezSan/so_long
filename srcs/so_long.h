@@ -6,7 +6,7 @@
 /*   By: dasanche <dasanche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 10:31:52 by dasanche          #+#    #+#             */
-/*   Updated: 2025/09/23 17:14:09 by dasanche         ###   ########.fr       */
+/*   Updated: 2025/09/24 16:54:49 by dasanche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ typedef struct s_map
 	int		y; // Eje y (Filas)
 	int		objects; // Objetos
 	int		exits; // Salidas
+	t_coord	exit_pos; // Posición de salida
 	t_coord	initial_pos; // Posición inicial
 }			t_map;
 
@@ -63,16 +64,17 @@ typedef struct s_ff_params
 	int		tile_size;
 
 	void	*image_wall;
-	// void	*image_floor;
-	// void	*image_player;
-	// void	*image_collectible;
-	// void	*image_exit;
+	void	*image_floor;
+	void	*image_player;
+	void	*image_collectible;
+	void	*image_exit;
 	
 }			t_ff_params;
 
 // main
 t_ff_params	*init_game(t_ff_params *game);
 void		free_map_structs(t_ff_params *game);
+void		move_player(t_ff_params *game, int x, int y);
 // gnl + gnl_utils
 char		*ft_strdup(const char *s);
 char		*ft_strchr(const char *s, int c);

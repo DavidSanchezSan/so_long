@@ -6,7 +6,7 @@
 /*   By: dasanche <dasanche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 18:07:19 by dasanche          #+#    #+#             */
-/*   Updated: 2025/09/23 17:14:01 by dasanche         ###   ########.fr       */
+/*   Updated: 2025/09/24 17:59:20 by dasanche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ t_map	*init_map(t_map *data_map)
 	data_map->y = 0;
 	data_map->objects = 0;
 	data_map->exits = 0;
+	data_map->exit_pos.x = 0;
+	data_map->exit_pos.y = 0;
 	data_map->initial_pos.x = 0;
 	data_map->initial_pos.y = 0;
 	return (data_map);
@@ -79,6 +81,11 @@ int	close_window(t_ff_params *game)
 	mlx_loop_end(game->mlx);
 	if (game->mlx)
 	{
+		mlx_destroy_image(game->mlx, game->image_collectible);
+		mlx_destroy_image(game->mlx, game->image_exit);
+		mlx_destroy_image(game->mlx, game->image_floor);
+		mlx_destroy_image(game->mlx, game->image_player);
+		mlx_destroy_image(game->mlx, game->image_wall);
 		mlx_destroy_display(game->mlx);
 		free(game->mlx);
 		game->mlx = NULL;
@@ -91,6 +98,11 @@ int	close_window(t_ff_params *game)
 int	key_handler(int keycode, t_ff_params *game)
 {
 	(void)game;
+	int	new_x;
+	int	new_y;
+	
+	new_x = game->data_map->initial_pos.x;
+	new_y = game->data_map->initial_pos.y;
 	printf("%i\n", keycode);
 	if (keycode == 65307)
 	{
@@ -99,18 +111,53 @@ int	key_handler(int keycode, t_ff_params *game)
 		close_window(game);
 	}
 	else if (keycode == 97 || keycode == 65361)
+	{
+		new_x -= 1;
 		printf("LEFT (A / ARROW_LEFT)\n");
+	}
 	else if (keycode == 119 || keycode == 65362)
+	{
+		new_y -= 1;
 		printf("UP (W / ARROW_UP)\n");
+	}
 	else if (keycode == 100 || keycode == 65363)
+	{
+		new_x += 1;
 		printf("RIGHT (D / ARROW_RIGHT)\n");
+	}
 	else if (keycode == 115 || keycode == 65364)
+	{
+		new_y += 1;
 		printf("DOWN (S / ARROW_DOWN)\n");
+	}
 	else
 	{
 		printf("%d\n", keycode);
 	}
+	move_player(game, new_x, new_y);
 	return (0);
+}
+
+void	move_player(t_ff_params *game, int new_x, int new_y)
+{
+	if (game->data_map->map[new_y][new_x] == '1')
+		return ;
+	if (game->data_map->map[game->data_map->initial_pos.y][game->data_map->initial_pos.x] != 'E')
+		game->data_map->map[game->data_map->initial_pos.y][game->data_map->initial_pos.x] = '0';
+	if ((game->data_map->initial_pos.y == game->data_map->exit_pos.y) && (game->data_map->initial_pos.x == game->data_map->exit_pos.x) && (game->data_map->objects != 0))
+		game->data_map->map[game->data_map->initial_pos.y][game->data_map->initial_pos.x] = 'E';
+	game->data_map->initial_pos.x = new_x;
+	game->data_map->initial_pos.y = new_y;
+	if (game->data_map->map[new_y][new_x] == 'C')
+		game->data_map->objects -= 1;
+	if ((game->data_map->map[new_y][new_x] == 'E') && (game->data_map->objects == 0))
+	{
+		printf("Has terminado el juego");
+		close_window(game);
+		return ;
+	}
+	game->data_map->map[game->data_map->initial_pos.y][game->data_map->initial_pos.x] = 'P';
+	print_map(game);
 }
 
 int	mouse_handler(int button, int x, int y, t_ff_params *game)
@@ -136,24 +183,32 @@ void	*load_image(const char *filename, int *image_width, t_ff_params *game)
 
 void	init_images(t_ff_params *game)
 {
-	game->image_wall = load_image("Estrellita.xpm", &game->tile_size, game);
-	// game->image_floor =
-	// game->image_player =
-	// game->image_collectible =
-	// game->image_exit =
+	game->image_wall = load_image("srcs/images/Tree_02.xpm", &game->tile_size, game);
+	game->image_floor = load_image("srcs/images/Grass_01.xpm", &game->tile_size, game);
+	game->image_player = load_image("srcs/images/Marceline_01.xpm", &game->tile_size, game);
+	game->image_collectible = load_image("srcs/images/Bass_01.xpm", &game->tile_size, game);
+	game->image_exit = load_image("srcs/images/Door_01.xpm", &game->tile_size, game);
 }
-
 void	render_map(t_ff_params *game, char **map)
 {
 	for (int i = 0; map[i]; i++)
 	{
 		for (int x = 0; map[i][x]; x++)
 		{
+			mlx_put_image_to_window(game->mlx, game->mlx_win,
+					game->image_floor, x * game->tile_size, i * game->tile_size);
 			if (map[i][x] == '1')
-			{
 				mlx_put_image_to_window(game->mlx, game->mlx_win,
 					game->image_wall, x * game->tile_size, i * game->tile_size);
-			}
+			if (map[i][x] == 'P')
+				mlx_put_image_to_window(game->mlx, game->mlx_win,
+					game->image_player, x * game->tile_size, i * game->tile_size);
+			if (map[i][x] == 'C')
+				mlx_put_image_to_window(game->mlx, game->mlx_win,
+					game->image_collectible, x * game->tile_size, i * game->tile_size);
+			if (map[i][x] == 'E')
+				mlx_put_image_to_window(game->mlx, game->mlx_win,
+					game->image_exit, x * game->tile_size, i * game->tile_size);
 		}
 	}
 }

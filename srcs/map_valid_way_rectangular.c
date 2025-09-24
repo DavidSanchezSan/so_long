@@ -6,7 +6,7 @@
 /*   By: dasanche <dasanche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 10:11:35 by dasanche          #+#    #+#             */
-/*   Updated: 2025/09/23 17:14:08 by dasanche         ###   ########.fr       */
+/*   Updated: 2025/09/24 15:45:47 by dasanche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,31 @@ int	find_player(char **map, int *px, int *py)
 	return (0);
 }
 
+// Encuentra P para posicion inicial:
+int	find_exit(char **map, int *px, int *py)
+{
+	int	y;
+	int	x;
+
+	y = 0;
+	while (map[y])
+	{
+		x = 0;
+		while (map[y][x])
+		{
+			if (map[y][x] == 'E')
+			{
+				*px = x;
+				*py = y;
+				return (1);
+			}
+			x++;
+		}
+		y++;
+	}
+	return (0);
+}
+
 // Función que valida el mapa
 int	valid_path(t_ff_params *game)
 {
@@ -108,6 +133,8 @@ int	valid_path(t_ff_params *game)
 			&game->data_map->initial_pos.y))
 		return (free_map_structs(copy_game),
 			print_error("No player found for path validation\n"), 0);
+	find_exit(game->data_map->map, &game->data_map->exit_pos.x,
+			&game->data_map->exit_pos.y);
 	copy_game->data_map->map = dup_map(game->data_map->map);
 	if (!copy_game->data_map->map)
 		return (free_map_structs(copy_game),
