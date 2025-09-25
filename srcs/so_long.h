@@ -6,7 +6,7 @@
 /*   By: dasanche <dasanche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 10:31:52 by dasanche          #+#    #+#             */
-/*   Updated: 2025/09/24 16:54:49 by dasanche         ###   ########.fr       */
+/*   Updated: 2025/09/25 16:53:21 by dasanche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,8 @@ typedef struct s_ff_params
 	void	*image_exit;
 	
 }			t_ff_params;
-
+// get_next_line_cleaner
+char		*ft_cleanup_stored(char **stored, char *line);
 // main
 void		print_map(t_ff_params *game);
 void		free_map_structs(t_ff_params *game);

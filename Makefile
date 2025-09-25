@@ -9,7 +9,8 @@ CFLAGS = -g -I minilibx-linux
 MLX = -Lminilibx-linux -lmlx -lX11 -lXext -lbsd
 
 # Archivos fuente:
-SRC =	srcs/get_next_line_utils.c \
+SRC =	srcs/get_next_line_cleaner.c \
+		srcs/get_next_line_utils.c \
 		srcs/get_next_line.c \
 		srcs/main.c \
 		srcs/map_checking.c \

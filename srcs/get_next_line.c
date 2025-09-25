@@ -6,7 +6,7 @@
 /*   By: dasanche <dasanche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 15:02:18 by dasanche          #+#    #+#             */
-/*   Updated: 2025/09/23 17:14:18 by dasanche         ###   ########.fr       */
+/*   Updated: 2025/09/25 16:53:45 by dasanche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,13 @@ static char	*ft_read_line(int *fd, int *bytes_read, char *buffer, char *stored)
 	return (stored);
 }
 
-static char	*ft_cleanup_stored(char **stored, char *line)
+char *ret_line(char *line, char **stored)
 {
-	free(*stored);
-	*stored = NULL;
-	return (line);
+	if ((*stored)[0] == '\0')
+		return (ft_cleanup_stored(stored, NULL));
+	else
+		return (line = ft_strdup(*stored), ft_cleanup_stored(stored, line));
 }
-
 static char	*ft_find_line(char **stored, int bytes_read)
 {
 	char	*line;
@@ -67,15 +67,16 @@ static char	*ft_find_line(char **stored, int bytes_read)
 		line = ft_substr(*stored, 0, to_end + 1);
 		temp = ft_substr(*stored, to_end + 1, ft_strlen(*stored) - to_end - 1);
 		free(*stored);
-		*stored = temp;
+		if (temp[0] == '\0')
+		{
+		    free(temp);
+		    *stored = NULL;
+		}
+		else
+		    *stored = temp;
 	}
 	else if (bytes_read == 0 && *stored != NULL)
-	{
-		if ((*stored)[0] == '\0')
-			return (ft_cleanup_stored(stored, NULL));
-		else
-			return (line = ft_strdup(*stored), ft_cleanup_stored(stored, line));
-	}
+		return(ret_line(line, stored));
 	return (line);
 }
 

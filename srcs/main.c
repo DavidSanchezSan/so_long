@@ -6,7 +6,7 @@
 /*   By: dasanche <dasanche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 18:07:19 by dasanche          #+#    #+#             */
-/*   Updated: 2025/09/24 17:59:20 by dasanche         ###   ########.fr       */
+/*   Updated: 2025/09/25 16:53:41 by dasanche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,23 @@ t_ff_params	*init_game(t_ff_params *game)
 	game->reach_e = 0;
 	game->mlx = NULL;
 	game->mlx_win = NULL;
-	game->tile_size = 200;
+	game->tile_size = 32;
 	game->image_wall = NULL;
 	return (game);
+}
+
+int ensure_map_size(t_ff_params *game)
+{
+	int screen_x;
+	int screen_y;
+
+	mlx_get_screen_size(game->mlx, &screen_x, &screen_y);
+	if (((game->width * game->tile_size) > screen_x) || (game->height * game->tile_size) > screen_y)
+	{
+		print_error("Map is too big!\nTry another size\n");
+		return (1);
+	}
+	return (0);
 }
 
 int	close_window(t_ff_params *game)
@@ -91,7 +105,7 @@ int	close_window(t_ff_params *game)
 		game->mlx = NULL;
 	}
 	free_map_structs(game);
-	exit(0);
+	exit(1);
 	return (0);
 }
 
@@ -234,13 +248,21 @@ int	main(int argc, char **argv)
 	// Por revisar:
 	if (map_checks(game) != 1)
 		return (free_map_structs(game), (3));
-	print_map(game);
+	// print_map(game);
 	game->mlx = mlx_init();
 	if (!game->mlx)
 	{
 		free_map_structs(game);
-		print_error("Error initializing MLX\n");
-		exit(1);
+		print_error("Initializing MLX\n");
+		return (1);
+	}
+	if (ensure_map_size(game) != 0)
+	{
+		mlx_destroy_display(game->mlx);
+		if (game->mlx)
+			free(game->mlx);
+		free_map_structs(game);
+		return (1);
 	}
 	// Lógica del juego:
 	game->mlx_win = mlx_new_window(game->mlx, game->width * game->tile_size,
@@ -248,10 +270,8 @@ int	main(int argc, char **argv)
 	if (!game->mlx_win)
 	{
 		free_map_structs(game);
-		print_error("Error creating window\n");
-		mlx_destroy_display(game->mlx);
-		free(game->mlx);
-		exit(1);
+		print_error("Creating window\n");
+		return (1);
 	}
 	init_images(game);
 	mlx_hook(game->mlx_win, 2, 1L << 0, key_handler, game); // Hook para teclas
