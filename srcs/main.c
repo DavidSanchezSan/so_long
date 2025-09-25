@@ -158,6 +158,7 @@ void	move_player(t_ff_params *game, int new_x, int new_y)
 	}
 	game->data_map->map[game->data_map->initial_pos.y][game->data_map->initial_pos.x] = 'P';
 	print_map(game);
+	render_map(game, game->data_map->map);
 }
 
 int	mouse_handler(int button, int x, int y, t_ff_params *game)
@@ -183,11 +184,11 @@ void	*load_image(const char *filename, int *image_width, t_ff_params *game)
 
 void	init_images(t_ff_params *game)
 {
-	game->image_wall = load_image("srcs/images/Tree_02.xpm", &game->tile_size, game);
+	game->image_wall = load_image("srcs/images/Tree_01.xpm", &game->tile_size, game);
 	game->image_floor = load_image("srcs/images/Grass_01.xpm", &game->tile_size, game);
 	game->image_player = load_image("srcs/images/Marceline_01.xpm", &game->tile_size, game);
 	game->image_collectible = load_image("srcs/images/Bass_01.xpm", &game->tile_size, game);
-	game->image_exit = load_image("srcs/images/Door_01.xpm", &game->tile_size, game);
+	game->image_exit = load_image("srcs/images/Portal_01.xpm", &game->tile_size, game);
 }
 void	render_map(t_ff_params *game, char **map)
 {
@@ -195,7 +196,8 @@ void	render_map(t_ff_params *game, char **map)
 	{
 		for (int x = 0; map[i][x]; x++)
 		{
-			mlx_put_image_to_window(game->mlx, game->mlx_win,
+			if (map[i][x] == '0')
+				mlx_put_image_to_window(game->mlx, game->mlx_win,
 					game->image_floor, x * game->tile_size, i * game->tile_size);
 			if (map[i][x] == '1')
 				mlx_put_image_to_window(game->mlx, game->mlx_win,
@@ -256,7 +258,6 @@ int	main(int argc, char **argv)
 	mlx_hook(game->mlx_win, 4, 1L << 2, mouse_handler, game); // Hook para ratón
 	mlx_hook(game->mlx_win, 17, 0, close_window, game); // Hook de cerrar ventana
 	render_map(game, game->data_map->map);
-	// mlx_loop_hook(mlx, render_frame, game);  // Lógica de renderizado
 	mlx_loop(game->mlx);
 	return (0);
 }

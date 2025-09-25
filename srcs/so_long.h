@@ -72,9 +72,16 @@ typedef struct s_ff_params
 }			t_ff_params;
 
 // main
-t_ff_params	*init_game(t_ff_params *game);
+void		print_map(t_ff_params *game);
 void		free_map_structs(t_ff_params *game);
+t_map		*init_map(t_map *data_map);
+t_ff_params	*init_game(t_ff_params *game);
+int			close_window(t_ff_params *game);
+int			key_handler(int keycode, t_ff_params *game);
 void		move_player(t_ff_params *game, int x, int y);
+void		*load_image(const char *filename, int *image_width, t_ff_params *game);
+void		init_images(t_ff_params *game);
+void		render_map(t_ff_params *game, char **map);
 // gnl + gnl_utils
 char		*ft_strdup(const char *s);
 char		*ft_strchr(const char *s, int c);
