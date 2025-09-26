@@ -58,6 +58,7 @@ typedef struct s_ff_params
 	int		height;
 	int		reach_c;
 	int		reach_e;
+	int		steps;
 	
 	void	*mlx;
 	void	*mlx_win;

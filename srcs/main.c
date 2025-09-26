@@ -64,9 +64,10 @@ t_ff_params	*init_game(t_ff_params *game)
 	game->height = 0;
 	game->reach_c = 0;
 	game->reach_e = 0;
+	game->steps = 0;
 	game->mlx = NULL;
 	game->mlx_win = NULL;
-	game->tile_size = 32;
+	game->tile_size = 64;
 	game->image_wall = NULL;
 	return (game);
 }
@@ -117,36 +118,36 @@ int	key_handler(int keycode, t_ff_params *game)
 	
 	new_x = game->data_map->initial_pos.x;
 	new_y = game->data_map->initial_pos.y;
-	printf("%i\n", keycode);
+	// printf("%i\n", keycode);
 	if (keycode == 65307)
 	{
 		printf("CLOSE GAME\n");
-		printf("%i\n", keycode);
+		// printf("%i\n", keycode);
 		close_window(game);
 	}
 	else if (keycode == 97 || keycode == 65361)
 	{
 		new_x -= 1;
-		printf("LEFT (A / ARROW_LEFT)\n");
+		// printf("LEFT (A / ARROW_LEFT)\n");
 	}
 	else if (keycode == 119 || keycode == 65362)
 	{
 		new_y -= 1;
-		printf("UP (W / ARROW_UP)\n");
+		// printf("UP (W / ARROW_UP)\n");
 	}
 	else if (keycode == 100 || keycode == 65363)
 	{
 		new_x += 1;
-		printf("RIGHT (D / ARROW_RIGHT)\n");
+		// printf("RIGHT (D / ARROW_RIGHT)\n");
 	}
 	else if (keycode == 115 || keycode == 65364)
 	{
 		new_y += 1;
-		printf("DOWN (S / ARROW_DOWN)\n");
+		// printf("DOWN (S / ARROW_DOWN)\n");
 	}
 	else
 	{
-		printf("%d\n", keycode);
+		// printf("%d\n", keycode);
 	}
 	move_player(game, new_x, new_y);
 	return (0);
@@ -156,6 +157,8 @@ void	move_player(t_ff_params *game, int new_x, int new_y)
 {
 	if (game->data_map->map[new_y][new_x] == '1')
 		return ;
+	game->steps++;
+	printf("Pasos dados: %d\n", game->steps);
 	if (game->data_map->map[game->data_map->initial_pos.y][game->data_map->initial_pos.x] != 'E')
 		game->data_map->map[game->data_map->initial_pos.y][game->data_map->initial_pos.x] = '0';
 	if ((game->data_map->initial_pos.y == game->data_map->exit_pos.y) && (game->data_map->initial_pos.x == game->data_map->exit_pos.x) && (game->data_map->objects != 0))
@@ -166,12 +169,11 @@ void	move_player(t_ff_params *game, int new_x, int new_y)
 		game->data_map->objects -= 1;
 	if ((game->data_map->map[new_y][new_x] == 'E') && (game->data_map->objects == 0))
 	{
-		printf("Has terminado el juego");
+		printf("Has terminado el juego con %d pasos\n", game->steps);
 		close_window(game);
 		return ;
 	}
 	game->data_map->map[game->data_map->initial_pos.y][game->data_map->initial_pos.x] = 'P';
-	print_map(game);
 	render_map(game, game->data_map->map);
 }
 
