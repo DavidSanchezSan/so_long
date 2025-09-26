@@ -44,13 +44,14 @@ static char	*ft_read_line(int *fd, int *bytes_read, char *buffer, char *stored)
 	return (stored);
 }
 
-char *ret_line(char *line, char **stored)
+char	*ret_line(char *line, char **stored)
 {
 	if ((*stored)[0] == '\0')
 		return (ft_cleanup_stored(stored, NULL));
 	else
 		return (line = ft_strdup(*stored), ft_cleanup_stored(stored, line));
 }
+
 static char	*ft_find_line(char **stored, int bytes_read)
 {
 	char	*line;
@@ -69,14 +70,14 @@ static char	*ft_find_line(char **stored, int bytes_read)
 		free(*stored);
 		if (temp[0] == '\0')
 		{
-		    free(temp);
-		    *stored = NULL;
+			free(temp);
+			*stored = NULL;
 		}
 		else
-		    *stored = temp;
+			*stored = temp;
 	}
 	else if (bytes_read == 0 && *stored != NULL)
-		return(ret_line(line, stored));
+		return (ret_line(line, stored));
 	return (line);
 }
 

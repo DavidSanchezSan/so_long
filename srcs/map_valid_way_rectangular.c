@@ -134,7 +134,7 @@ int	valid_path(t_ff_params *game)
 		return (free_map_structs(copy_game),
 			print_error("No player found for path validation\n"), 0);
 	find_exit(game->data_map->map, &game->data_map->exit_pos.x,
-			&game->data_map->exit_pos.y);
+		&game->data_map->exit_pos.y);
 	copy_game->data_map->map = dup_map(game->data_map->map);
 	if (!copy_game->data_map->map)
 		return (free_map_structs(copy_game),

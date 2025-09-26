@@ -72,13 +72,14 @@ t_ff_params	*init_game(t_ff_params *game)
 	return (game);
 }
 
-int ensure_map_size(t_ff_params *game)
+int	ensure_map_size(t_ff_params *game)
 {
-	int screen_x;
-	int screen_y;
+	int	screen_x;
+	int	screen_y;
 
 	mlx_get_screen_size(game->mlx, &screen_x, &screen_y);
-	if (((game->width * game->tile_size) > screen_x) || (game->height * game->tile_size) > screen_y)
+	if (((game->width * game->tile_size) > screen_x)
+		|| (game->height * game->tile_size) > screen_y)
 	{
 		print_error("Map is too big!\nTry another size\n");
 		return (1);
@@ -112,43 +113,25 @@ int	close_window(t_ff_params *game)
 
 int	key_handler(int keycode, t_ff_params *game)
 {
-	(void)game;
 	int	new_x;
 	int	new_y;
-	
+
+	(void)game;
 	new_x = game->data_map->initial_pos.x;
 	new_y = game->data_map->initial_pos.y;
-	// printf("%i\n", keycode);
 	if (keycode == 65307)
 	{
 		printf("CLOSE GAME\n");
-		// printf("%i\n", keycode);
 		close_window(game);
 	}
 	else if (keycode == 97 || keycode == 65361)
-	{
 		new_x -= 1;
-		// printf("LEFT (A / ARROW_LEFT)\n");
-	}
 	else if (keycode == 119 || keycode == 65362)
-	{
 		new_y -= 1;
-		// printf("UP (W / ARROW_UP)\n");
-	}
 	else if (keycode == 100 || keycode == 65363)
-	{
 		new_x += 1;
-		// printf("RIGHT (D / ARROW_RIGHT)\n");
-	}
 	else if (keycode == 115 || keycode == 65364)
-	{
 		new_y += 1;
-		// printf("DOWN (S / ARROW_DOWN)\n");
-	}
-	else
-	{
-		// printf("%d\n", keycode);
-	}
 	move_player(game, new_x, new_y);
 	return (0);
 }
@@ -183,6 +166,7 @@ int	mouse_handler(int button, int x, int y, t_ff_params *game)
 	printf("Mouse button %d clicked at (%d, %d)\n", button, x, y);
 	return (0);
 }
+
 // ########################################################################################
 void	*load_image(const char *filename, int *image_width, t_ff_params *game)
 {
@@ -206,6 +190,7 @@ void	init_images(t_ff_params *game)
 	game->image_collectible = load_image("srcs/images/Bass_01.xpm", &game->tile_size, game);
 	game->image_exit = load_image("srcs/images/Portal_01.xpm", &game->tile_size, game);
 }
+
 void	render_map(t_ff_params *game, char **map)
 {
 	for (int i = 0; map[i]; i++)

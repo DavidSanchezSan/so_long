@@ -59,7 +59,7 @@ typedef struct s_ff_params
 	int		reach_c;
 	int		reach_e;
 	int		steps;
-	
+
 	void	*mlx;
 	void	*mlx_win;
 	int		tile_size;
@@ -68,8 +68,7 @@ typedef struct s_ff_params
 	void	*image_floor;
 	void	*image_player;
 	void	*image_collectible;
-	void	*image_exit;
-	
+	void	*image_exit;	
 }			t_ff_params;
 // get_next_line_cleaner
 char		*ft_cleanup_stored(char **stored, char *line);
