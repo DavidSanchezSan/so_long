@@ -6,7 +6,7 @@
 /*   By: dasanche <dasanche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 14:28:17 by dasanche          #+#    #+#             */
-/*   Updated: 2025/09/27 16:05:48 by dasanche         ###   ########.fr       */
+/*   Updated: 2025/09/27 17:52:57 by dasanche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ void	free_map(char **map)
 }
 
 // Función para liberar map_structs y mensaje de error: 
-
 int	free_error_print(char *msg, t_ff_params *game, int ret)
 {
 	free_map_structs(game);

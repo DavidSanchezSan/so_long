@@ -6,7 +6,7 @@
 /*   By: dasanche <dasanche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 18:07:19 by dasanche          #+#    #+#             */
-/*   Updated: 2025/09/25 16:53:31 by dasanche         ###   ########.fr       */
+/*   Updated: 2025/09/27 17:52:48 by dasanche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ int	valid_walls(char **map, int width, int height)
 }
 
 // Conteo de salida/objetos/posición_inicial:
-
 int	exit_init_pos_count(char **map, int width, int height)
 {
 	int	x;

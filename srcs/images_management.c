@@ -6,12 +6,13 @@
 /*   By: dasanche <dasanche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 15:36:58 by dasanche          #+#    #+#             */
-/*   Updated: 2025/09/27 15:44:01 by dasanche         ###   ########.fr       */
+/*   Updated: 2025/09/27 17:52:45 by dasanche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
+// Función que carga las imágenes en memoria:
 void	*load_image(const char *filename, int *image_width, t_ff_params *game)
 {
 	void	*img;
@@ -26,6 +27,7 @@ void	*load_image(const char *filename, int *image_width, t_ff_params *game)
 	return (img);
 }
 
+//Función que carga las imágenes concretas usando la función anterior:
 void	init_images(t_ff_params *game)
 {
 	game->image_wall = load_image("srcs/images/Tree_01.xpm", &game->tile_size,
@@ -40,6 +42,7 @@ void	init_images(t_ff_params *game)
 			game);
 }
 
+//Función que dibuja/pone la imagen en función del caracter:
 void	manage_image(t_ff_params *game, char **map, int x, int i)
 {
 	if (map[i][x] == '0')
@@ -59,6 +62,7 @@ void	manage_image(t_ff_params *game, char **map, int x, int i)
 			* game->tile_size, i * game->tile_size);
 }
 
+//Función para el renderizado del mapa:
 void	render_map(t_ff_params *game, char **map)
 {
 	int	i;

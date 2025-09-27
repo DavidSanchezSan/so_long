@@ -6,12 +6,13 @@
 /*   By: dasanche <dasanche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 18:07:19 by dasanche          #+#    #+#             */
-/*   Updated: 2025/09/27 16:04:52 by dasanche         ###   ########.fr       */
+/*   Updated: 2025/09/27 17:52:47 by dasanche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
+//Inicializo el mapa:
 t_map	*init_map(t_map *data_map)
 {
 	data_map = malloc(sizeof(t_map));
@@ -32,6 +33,7 @@ t_map	*init_map(t_map *data_map)
 	return (data_map);
 }
 
+//Inicializo el juego:
 t_ff_params	*init_game(t_ff_params *game)
 {
 	game = malloc(sizeof(t_ff_params));
@@ -54,6 +56,7 @@ t_ff_params	*init_game(t_ff_params *game)
 	return (game);
 }
 
+//Aseguro que el mapa cabe en la pantalla:
 int	ensure_map_size(t_ff_params *game)
 {
 	int	screen_x;
@@ -83,6 +86,7 @@ int	parsing_map(int argc, char **argv, t_ff_params *game)
 	return (0);
 }
 
+//Main:
 int	main(int argc, char **argv)
 {
 	t_ff_params	*game;

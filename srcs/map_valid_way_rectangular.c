@@ -6,7 +6,7 @@
 /*   By: dasanche <dasanche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 10:11:35 by dasanche          #+#    #+#             */
-/*   Updated: 2025/09/27 14:54:01 by dasanche         ###   ########.fr       */
+/*   Updated: 2025/09/27 17:52:51 by dasanche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	rectangular_map(char **map, int width, int height)
 	return (1);
 }
 
-// Función que duplica el mapa para pasar flood-fill (lo modifica)
+// Función que duplica el mapa para pasar flood-fill (que lo modifica)
 char	**dup_map(char **map)
 {
 	int		i;
@@ -81,7 +81,7 @@ int	find_player(char **map, int *px, int *py)
 	return (0);
 }
 
-// Encuentra P para posicion inicial:
+// Encuentra E para la salida:
 int	find_exit(char **map, int *px, int *py)
 {
 	int	y;

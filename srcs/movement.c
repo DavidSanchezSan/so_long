@@ -6,12 +6,13 @@
 /*   By: dasanche <dasanche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/27 15:36:00 by dasanche          #+#    #+#             */
-/*   Updated: 2025/09/27 16:05:42 by dasanche         ###   ########.fr       */
+/*   Updated: 2025/09/27 17:52:53 by dasanche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
+//Función que gestiona los mensajes del teclado:
 int	key_handler(int keycode, t_ff_params *game)
 {
 	int	new_x;
@@ -37,6 +38,7 @@ int	key_handler(int keycode, t_ff_params *game)
 	return (0);
 }
 
+//Función mueve el personaje:
 void	move_player(t_ff_params *game, int new_x, int new_y)
 {
 	t_coord	init;
@@ -64,6 +66,7 @@ void	move_player(t_ff_params *game, int new_x, int new_y)
 	render_map(game, game->data_map->map);
 }
 
+//Función que cierra la ventana y libera memoria:
 int	close_window(t_ff_params *game)
 {
 	if (game->mlx && game->mlx_win)
