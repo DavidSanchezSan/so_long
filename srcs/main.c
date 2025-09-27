@@ -6,7 +6,7 @@
 /*   By: dasanche <dasanche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 18:07:19 by dasanche          #+#    #+#             */
-/*   Updated: 2025/09/25 16:57:38 by dasanche         ###   ########.fr       */
+/*   Updated: 2025/09/27 13:28:58 by dasanche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ t_ff_params	*init_game(t_ff_params *game)
 	game->steps = 0;
 	game->mlx = NULL;
 	game->mlx_win = NULL;
-	game->tile_size = 64;
+	game->tile_size = 128;
 	game->image_wall = NULL;
 	return (game);
 }
