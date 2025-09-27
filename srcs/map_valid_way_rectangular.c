@@ -6,28 +6,11 @@
 /*   By: dasanche <dasanche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 10:11:35 by dasanche          #+#    #+#             */
-/*   Updated: 2025/09/25 16:53:24 by dasanche         ###   ########.fr       */
+/*   Updated: 2025/09/27 14:54:01 by dasanche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
-
-// Dimensiones del mapa:
-void	get_map_dimensions(char **map, int *width, int *height)
-{
-	int	i;
-
-	*width = 0;
-	*height = 0;
-	i = 0;
-	while (map[i] != NULL)
-	{
-		if ((int)ft_strlen(map[i]) > *width)
-			*width = ft_strlen(map[i]);
-		i++;
-	}
-	*height = i;
-}
 
 // Función que comprueba que el mapa es rectangular
 int	rectangular_map(char **map, int width, int height)
@@ -131,14 +114,12 @@ int	valid_path(t_ff_params *game)
 	copy_game = init_game(NULL);
 	if (!find_player(game->data_map->map, &game->data_map->initial_pos.x,
 			&game->data_map->initial_pos.y))
-		return (free_map_structs(copy_game),
-			print_error("No player found for path validation\n"), 0);
+		return (free_error_print("No player in path validation", copy_game, 0));
 	find_exit(game->data_map->map, &game->data_map->exit_pos.x,
 		&game->data_map->exit_pos.y);
 	copy_game->data_map->map = dup_map(game->data_map->map);
 	if (!copy_game->data_map->map)
-		return (free_map_structs(copy_game),
-			print_error("Malloc failure in path validation"), 0);
+		return (free_error_print("Malloc fail for path", copy_game, 0));
 	copy_game->height = game->height;
 	copy_game->width = game->width;
 	copy_game->data_map->initial_pos.x = game->data_map->initial_pos.x;
@@ -146,11 +127,9 @@ int	valid_path(t_ff_params *game)
 	flood_fill(copy_game, copy_game->data_map->initial_pos.x,
 		copy_game->data_map->initial_pos.y);
 	if (copy_game->reach_c != game->data_map->objects)
-		return (free_map_structs(copy_game),
-			print_error("Not all collectibles reachable\n"), 0);
+		return (free_error_print("Not all c's reachable", copy_game, 0));
 	if (!copy_game->reach_e)
-		return (free_map_structs(copy_game),
-			print_error("Exit not reachable\n"), 0);
+		return (free_error_print("Exit not reachable", copy_game, 0));
 	free_map_structs(copy_game);
 	return (1);
 }
