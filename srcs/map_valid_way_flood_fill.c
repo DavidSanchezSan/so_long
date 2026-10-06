@@ -25,7 +25,7 @@ static void	push(t_stack *stack, int x, int y)
 // Si la coordenada es visitable y no ha sido visitada es guardada en el stack.
 static void	visit(char **map, t_stack *stack, int x, int y)
 {
-	if (map[y][x] != '1' && map[y][x] != 'V') // Accesible y no visitado
+	if (map[y][x] != '1' && map[y][x] != 'V')
 		push(stack, x, y);
 }
 

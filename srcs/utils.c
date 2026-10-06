@@ -6,7 +6,7 @@
 /*   By: dasanche <dasanche@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 11:07:13 by dasanche          #+#    #+#             */
-/*   Updated: 2025/09/25 16:53:16 by dasanche         ###   ########.fr       */
+/*   Updated: 2025/09/27 17:52:58 by dasanche         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,20 +71,4 @@ int	open_file(char *filename)
 	if (fd < 0)
 		print_error("Map-file could not be opened.\n");
 	return (fd);
-}
-
-// Función para liberar el mapa en su totalidad
-void	free_map(char **map)
-{
-	int	i;
-
-	if (!map)
-		return ;
-	i = 0;
-	while (map[i])
-	{
-		free(map[i]);
-		i++;
-	}
-	free(map);
 }
